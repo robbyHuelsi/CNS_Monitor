@@ -11,6 +11,10 @@ public class CnsConfig {
 	
 	private Vector<Computer> all_computers = new Vector<Computer>();
 	
+	public Vector<Computer> getAll_computers() {
+		return all_computers;
+	}
+
 	private CnsConfig() {}
 	
 	public static CnsConfig getInstance() {
