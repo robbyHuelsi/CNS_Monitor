@@ -6,6 +6,12 @@ import cns_main.CnsConfig;
 import config_utilities.Computer;
 
 public class NetworkMonitor {
+	/*
+	 * This class can monitor the network
+	 * gets the information from the config
+	 * updates the config 
+	 * 
+	 */
 	
 	private CnsConfig config;
 	

@@ -12,6 +12,13 @@ import cns_controller.NetworkMonitor;
 
 
 public class CnsGui extends JFrame{
+	/*
+	 * Only GUI! should not include any functionality
+	 * Config is the Model that should be visualized
+	 * Calls the controllers ModuleMonitor and NetworkMonitor
+	 * 
+	 * 
+	 */
 
 	private static final long serialVersionUID = 1L;
 

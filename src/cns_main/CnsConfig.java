@@ -5,7 +5,14 @@ import java.util.Vector;
 
 
 public class CnsConfig {
-	// implemented as singleton
+	/*
+	 * Model with all the data
+	 * reads data from json config file
+	 * implemented as singleton
+	 * Should inlude all the data from the config file
+	 * Guess two methods (read/write config) are all we need here
+	 * 
+	 */
 	
 	private static CnsConfig instance = null;
 	
