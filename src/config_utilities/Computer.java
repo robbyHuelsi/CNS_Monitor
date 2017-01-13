@@ -21,6 +21,12 @@ public class Computer {
 	public void setMac(String mac) {
 		this.mac = mac;
 	}
+	public String getUser() {
+		return user;
+	}
+	public void setUser(String user) {
+		this.user = user;
+	}
 	public boolean isReachable() {
 		return reachable;
 	}

@@ -2,6 +2,7 @@ package cns_main;
 
 import config_utilities.*;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.Iterator;
 import java.util.Vector;
@@ -25,35 +26,40 @@ public class CnsConfig {
 	 * Guess two methods (read/write config) are all we need here
 	 * 
 	 */
-	
+
 	private static CnsConfig instance = null;
 	private String file_path = "C:\\Users\\Philipp\\workspace\\CNS_Monitor\\src\\config2.json";
-	
+	private File file;
+
 	private Vector<Computer> all_computers = new Vector<Computer>();
 	private Vector<Module> all_modules = new Vector<Module>();
-	
+
 	public Vector<Computer> getAll_computers() {
 		return all_computers;
 	}
+	public Vector<Module> getAll_modules() {
+		return all_modules;
+	}
 
 	private CnsConfig() {}
-	
+
 	public static CnsConfig getInstance() {
 		if (instance == null){
 			instance = new CnsConfig();
-			
+
 		}
 		return instance;
 	}
-	
-	public boolean load(){
-		//TODO Load json config file 
+
+	public boolean load(File file){
+		this.file_path = file.getAbsolutePath();
+		this.file = file;
 		System.out.println("load wurde gedruekt!");
 		JSONParser parser = new JSONParser();
 		try{
-			Object obj = parser.parse(new FileReader(file_path));
+			Object obj = parser.parse(new FileReader(file));
 			JSONObject jsonObject = (JSONObject) obj;
-			
+
 			// read Computers
 			JSONArray computers = (JSONArray) jsonObject.get("Computers");
 			Iterator<JSONObject> iterator = computers.iterator();
@@ -63,9 +69,9 @@ public class CnsConfig {
 				String mac = (String) json_computer.get("MacLan");
 				String user = (String) json_computer.get("User");
 				all_computers.addElement(new Computer( name , mac , user));
-				System.out.println(all_computers.lastElement());
+				//System.out.println(all_computers.lastElement());
 			}
-			
+
 			// read Modules
 			JSONArray modules = (JSONArray) jsonObject.get("Modules");
 			iterator = modules.iterator();
@@ -77,14 +83,14 @@ public class CnsConfig {
 				int port = Integer.parseInt( (String) json_module.get("Port"));
 				String command = (String) json_module.get("Command");
 				for (Computer computer_temp : all_computers){
-					if (computer_temp.getName()==name){
+					if (computer_temp.getName().equals(computer_string))
 						computer = computer_temp;
-					}
 				}
 				all_modules.addElement(new Module(name, port, computer));
+				//System.out.println(all_modules.lastElement());
 			}
-			
-			
+
+
 
 		}
 		catch (IOException e) {
@@ -101,13 +107,13 @@ public class CnsConfig {
 		}
 		//try(FileInputStream inputStream = new FileInputStream("foo.txt")) {     
 		//    String everything = IOUtils.toString(inputStream);
-		    // do something with everything string
+		// do something with everything string
 		//}
 		return true;
 	}
-	
+
 	public boolean write(){
-		
+
 		return false;
 	}
 }

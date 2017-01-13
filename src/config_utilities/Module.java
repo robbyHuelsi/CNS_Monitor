@@ -18,4 +18,26 @@ public class Module {
 		this.computer = computer;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public int getListeningPort() {
+		return listening_port;
+	}
+
+	public String getLocationPath() {
+		return location_path;
+	}
+
+	@Override
+	public String toString() {
+		return "Module [name=" + name + ", listening_port=" + listening_port + ", location_path=" + location_path
+				+ ", computer=" + computer + "]";
+	}
+
+	public Computer getComputer() {
+		return computer;
+	}
+
 }
