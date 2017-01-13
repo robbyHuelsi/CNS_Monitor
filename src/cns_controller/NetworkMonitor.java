@@ -33,7 +33,7 @@ public class NetworkMonitor {
 	public boolean all_computers_reachable(){
 		//TODO check if all computer reachable
 		
-		checkAllIpAdresses();
+		checkAllIpAdressesAsynchronously();
 
 		
 		Vector<Computer> all_computers = config.getAll_computers();
@@ -41,11 +41,10 @@ public class NetworkMonitor {
 			// TODO check availablity of computer
 			computer.setReachable(true);
 		}
-		System.out.println("all computers reachable, dummy");
 		return true;
 	}
 	
-	public void checkAllIpAdresses(){
+	public void checkAllIpAdressesAsynchronously(){
 		int timeout = 2000;
 		String subnet = "192.168.178";
 		
@@ -58,18 +57,13 @@ public class NetworkMonitor {
 			}).start();
 		}
 		
-		/*for (String ipAdress : ipAdresses) {
-			System.out.println(getMac(ipAdress));
-			
-		}*/
-		
 	}
 	
 	public void checkIsReachable(String host, int timeout) {
 		try {
 			InetAddress ipAdress = InetAddress.getByName(host);
 			if (ipAdress.isReachable(timeout)){
-				System.out.println(host);
+				System.out.println(host + ": " + getMac(host));
 			}
 		} catch (IOException e) {
 			return;
