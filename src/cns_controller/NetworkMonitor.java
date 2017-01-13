@@ -30,37 +30,6 @@ public class NetworkMonitor {
 		this.config = config;
 	}
 	
-	public void getIpAdresses(){
-		int timeout = 20;
-		String subnet = "192.168.188";
-		Vector<InetAddress> ipAdresses = new Vector<InetAddress>();
-		for (int i=1;i<255;i++){
-			String host = subnet + "." + i;
-			try {
-				System.out.println(i + ":");
-				InetAddress ipAdress = InetAddress.getByName(host);
-				System.out.println("ipAdress set");
-				if (ipAdress.isReachable(timeout)){
-					ipAdresses.add(ipAdress);
-					System.out.println(host + " is reachable");
-				}else{
-					System.out.println(host + " is not reachable");
-				}
-				System.out.println("----");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				System.out.println("Looking for " + host + "failed");
-			}
-		}
-		
-		for (InetAddress ipAdress : ipAdresses) {
-			System.out.println(getMac(ipAdress.toString().substring(1)));
-			
-		}
-		
-	}
-	
 	public boolean all_computers_reachable(){
 		//TODO check if all computer reachable
 		
@@ -74,6 +43,57 @@ public class NetworkMonitor {
 		}
 		System.out.println("all computers reachable, dummy");
 		return true;
+	}
+	
+	public void getIpAdresses(){
+		int timeout = 20;
+		String subnet = "192.168.188";
+		boolean windows = System.getProperty("os.name").startsWith("Windows");
+		Vector<String> ipAdresses = new Vector<String>();
+		for (int i=1;i<255;i++){
+			String host = subnet + "." + i;
+			System.out.println(i + ":");
+			if ((windows?isReachableByPing(host, timeout):isReachableByInetAddress(host, timeout))) {
+				System.out.println(host);
+				ipAdresses.add(host);
+			} else {
+				
+			}
+			
+			
+				
+			System.out.println("----");
+		}
+		
+		for (String ipAdress : ipAdresses) {
+			System.out.println(getMac(ipAdress));
+			
+		}
+		
+	}
+	
+	public static boolean isReachableByInetAddress(String host, int timeout) {
+		try {
+			InetAddress ipAdress = InetAddress.getByName(host);
+			return ipAdress.isReachable(timeout);
+		} catch (IOException e) {
+			return false;
+		}
+	}
+	
+	public static boolean isReachableByPing(String host, int timeout) {
+	    try{
+	        String cmd = "ping " + host + " -n 1 -w " + timeout; // For Windows
+	        System.out.println("Windows: " + cmd);
+
+	        Process myProcess = Runtime.getRuntime().exec(cmd);
+	        myProcess.waitFor();
+
+	        return myProcess.exitValue() == 0;
+	    } catch( Exception e ) {
+	        e.printStackTrace();
+	        return false;
+	    }
 	}
 	
 	private String getMac(String ip) {
