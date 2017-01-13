@@ -59,12 +59,6 @@
 			"Command":""
 		},
 		{
-			"Name":"EmoFani",
-			"Computer":"Nuc2",
-			"Port":"",
-			"Command":""
-		},
-		{
 			"Name":"TTS",
 			"Computer":"Main",
 			"Port":"50021",
