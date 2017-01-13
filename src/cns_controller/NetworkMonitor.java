@@ -33,7 +33,7 @@ public class NetworkMonitor {
 	public boolean all_computers_reachable(){
 		//TODO check if all computer reachable
 		
-		getIpAdresses();
+		checkAllIpAdresses();
 
 		
 		Vector<Computer> all_computers = config.getAll_computers();
@@ -45,55 +45,35 @@ public class NetworkMonitor {
 		return true;
 	}
 	
-	public void getIpAdresses(){
-		int timeout = 20;
-		String subnet = "192.168.188";
-		boolean windows = System.getProperty("os.name").startsWith("Windows");
-		Vector<String> ipAdresses = new Vector<String>();
+	public void checkAllIpAdresses(){
+		int timeout = 2000;
+		String subnet = "192.168.178";
+		
 		for (int i=1;i<255;i++){
-			String host = subnet + "." + i;
-			System.out.println(i + ":");
-			if ((windows?isReachableByPing(host, timeout):isReachableByInetAddress(host, timeout))) {
-				System.out.println(host);
-				ipAdresses.add(host);
-			} else {
-				
-			}
-			
-			
-				
-			System.out.println("----");
+			String host = subnet + "." + i;			
+			new Thread(new Runnable() {
+			    public void run() {
+			    	checkIsReachable(host, timeout);
+			    }
+			}).start();
 		}
 		
-		for (String ipAdress : ipAdresses) {
+		/*for (String ipAdress : ipAdresses) {
 			System.out.println(getMac(ipAdress));
 			
-		}
+		}*/
 		
 	}
 	
-	public static boolean isReachableByInetAddress(String host, int timeout) {
+	public void checkIsReachable(String host, int timeout) {
 		try {
 			InetAddress ipAdress = InetAddress.getByName(host);
-			return ipAdress.isReachable(timeout);
+			if (ipAdress.isReachable(timeout)){
+				System.out.println(host);
+			}
 		} catch (IOException e) {
-			return false;
+			return;
 		}
-	}
-	
-	public static boolean isReachableByPing(String host, int timeout) {
-	    try{
-	        String cmd = "ping " + host + " -n 1 -w " + timeout; // For Windows
-	        System.out.println("Windows: " + cmd);
-
-	        Process myProcess = Runtime.getRuntime().exec(cmd);
-	        myProcess.waitFor();
-
-	        return myProcess.exitValue() == 0;
-	    } catch( Exception e ) {
-	        e.printStackTrace();
-	        return false;
-	    }
 	}
 	
 	private String getMac(String ip) {
