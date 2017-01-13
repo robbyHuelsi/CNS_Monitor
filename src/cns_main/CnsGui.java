@@ -48,9 +48,11 @@ public class CnsGui extends JFrame{
 		JPanel buttons = new JPanel();
 		JButton load_config = new JButton("Load Config");
 		JButton check_network = new JButton ("Check Network");
+		JButton start_modules = new JButton ("Start Modules");
 
 		buttons.add(load_config);
 		buttons.add(check_network);
+		buttons.add(start_modules);
 
 		// Build computers table
 		class MyComputerTableModel extends AbstractTableModel {
@@ -140,6 +142,14 @@ public class CnsGui extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				network_monitor.all_computers_reachable();
 				computer_table.updateUI();
+			}
+		});
+		
+		start_modules.addActionListener ( new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				module_monitor.start_all_modules();
 			}
 		});
 
