@@ -37,11 +37,16 @@ public class NetworkMonitor {
 		for (int i=1;i<255;i++){
 			String host = subnet + "." + i;
 			try {
+				System.out.println(i + ":");
 				InetAddress ipAdress = InetAddress.getByName(host);
+				System.out.println("ipAdress set");
 				if (ipAdress.isReachable(timeout)){
 					ipAdresses.add(ipAdress);
 					System.out.println(host + " is reachable");
+				}else{
+					System.out.println(host + " is not reachable");
 				}
+				System.out.println("----");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
@@ -70,29 +75,6 @@ public class NetworkMonitor {
 		System.out.println("all computers reachable, dummy");
 		return true;
 	}
-	
-	
-	public String getMACAddress(String ip){ 
-        String str = ""; 
-        String macAddress = ""; 
-        try { 
-            Process p = Runtime.getRuntime().exec("nbtstat -A " + ip); 
-            InputStreamReader ir = new InputStreamReader(p.getInputStream()); 
-            LineNumberReader input = new LineNumberReader(ir); 
-            for (int i = 1; i <100; i++) { 
-                str = input.readLine(); 
-                if (str != null) { 
-                    if (str.indexOf("MAC Address") > 1) { 
-                        macAddress = str.substring(str.indexOf("MAC Address") + 14, str.length()); 
-                        break; 
-                    } 
-                } 
-            } 
-        } catch (IOException e) { 
-            e.printStackTrace(System.out); 
-        } 
-        return macAddress; 
-    }
 	
 	private String getMac(String ip) {
 		Pattern macpt = null;
@@ -130,8 +112,8 @@ public class NetworkMonitor {
 
 	            // when Matcher finds a Line then return it as result
 	            if (m.find()) {
-	                System.out.println("Found");
-	                System.out.println("MAC: " + m.group(0));
+	                //System.out.println("Found");
+	                //System.out.println("MAC: " + m.group(0));
 	                return m.group(0);
 	            }
 
