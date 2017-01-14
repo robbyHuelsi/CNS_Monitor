@@ -3,13 +3,8 @@ package cns_controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Collections;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,22 +23,59 @@ public class NetworkMonitor {
 	private CnsConfig config;
 	private CnsGui gui;
 	
+	
+	
 	public NetworkMonitor(CnsConfig config, CnsGui gui){
 		this.config = config;
 		this.gui = gui;
 	}
 	
-	public boolean all_computers_reachable(){
-		//TODO check if all computer reachable
+	public boolean checkNetwork(){
+		checkInternetConnection();
 		
-		checkAllIpAdressesAsynchronously();
+		String ip = getOwnIpAddress();
+		String subnet = ip.substring(ip.indexOf("/")+1, ip.lastIndexOf("."));
+		System.out.println("Subnet: " + subnet);
+		checkAllIpAdressesAsynchronously(subnet);
 
 		return true;
 	}
 	
-	public void checkAllIpAdressesAsynchronously(){
+	public String getOwnIpAddress(){
+		try {
+			return InetAddress.getLocalHost().toString();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	public String getOwnMacAddress(){
+		return getMac(getOwnIpAddress());
+	}
+	
+	public boolean checkInternetConnection(){
 		int timeout = 2000;
-		String subnet = "192.168.178";
+		String[] hosts = {"https://www.google.de","https://www.wikipedia.org","https://www.github.com"};
+		InetAddress address;
+		for (String host : hosts) {
+			try {
+				address = InetAddress.getByName(host);
+				if (address.isReachable(timeout)) {
+					System.out.println("Internt connected");
+					return true;
+				}else{
+					System.out.println(host + " not available");
+				}
+			} catch (IOException e) {}
+		}
+		System.out.println("No Internet connection");
+		return false;
+	}
+	
+	private void checkAllIpAdressesAsynchronously(String subnet){
+		int timeout = 2000;
 		
 		for (int i=1;i<255;i++){
 			String host = subnet + "." + i;			
@@ -56,7 +88,7 @@ public class NetworkMonitor {
 		
 	}
 	
-	public void checkIsReachable(String host, int timeout) {
+	private void checkIsReachable(String host, int timeout) {
 		try {
 			InetAddress ipAdress = InetAddress.getByName(host);
 			if (ipAdress.isReachable(timeout)){
@@ -77,7 +109,7 @@ public class NetworkMonitor {
 		}
 	}
 	
-	private String getMac(String ip) {
+	public String getMac(String ip) {
 		Pattern macpt = null;
 		
 	    // Find OS and set command according to OS

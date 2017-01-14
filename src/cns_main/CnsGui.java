@@ -147,7 +147,7 @@ public class CnsGui extends JFrame{
 
 		check_network.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				network_monitor.all_computers_reachable();
+				network_monitor.checkNetwork();
 				computer_table.updateUI();
 			}
 		});
