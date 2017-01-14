@@ -63,7 +63,7 @@ public class NetworkMonitor {
 	public String getOwnIpAddress(){
 		try {
 			String ip = InetAddress.getLocalHost().toString();
-			return ip.substring(ip.indexOf("/"));
+			return ip.substring(ip.indexOf("/")+1);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
