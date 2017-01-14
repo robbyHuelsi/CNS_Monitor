@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +38,7 @@ public class NetworkMonitor {
 		this.config = config;
 	}
 	
-	public void addGui(CnsGui gui){
+	public void setGui(CnsGui gui){
 		this.gui = gui;
 	}
 	
@@ -61,7 +65,39 @@ public class NetworkMonitor {
 	}
 	
 	public String getOwnMacAddress(){
-		return getMac(getOwnIpAddress());
+		try {
+			InetAddress ip = InetAddress.getLocalHost();
+			Vector<String> macs = new Vector<String>();
+			
+			Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
+			while(networks.hasMoreElements()) {
+				NetworkInterface network = networks.nextElement();
+				byte[] mac = network.getHardwareAddress();
+				
+				if(mac != null) {
+					System.out.print("Current MAC address : ");
+					
+					StringBuilder sb = new StringBuilder();
+					for (int i = 0; i < mac.length; i++) {
+						sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
+					}
+					System.out.println(sb.toString());
+					macs.add(sb.toString());
+				}
+			}
+			
+			if(!macs.isEmpty()){
+				return macs.get(0);
+			}else{
+				return "";
+			}
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return "";
+		} catch (SocketException e){
+			e.printStackTrace();
+			return "";
+		}
 	}
 	
 	public boolean checkInternetConnection(){
@@ -101,8 +137,8 @@ public class NetworkMonitor {
 		try {
 			InetAddress ipAdress = InetAddress.getByName(host);
 			if (ipAdress.isReachable(timeout)){
-				System.out.println(host + ": " + getMac(host));
-				String mac = getMac(host);
+				String mac = getMacAddress(host);
+				System.out.println(host + ": " + mac);
 				for (Computer computer : config.getAll_computers()) {
 					if (mac.equals(computer.getMacLan())) {
 						computer.setIp(host);
@@ -118,7 +154,7 @@ public class NetworkMonitor {
 		}
 	}
 	
-	public String getMac(String ip) {
+	public String getMacAddress(String ip) {
 		Pattern macpt = null;
 		
 	    // Find OS and set command according to OS

@@ -1,7 +1,5 @@
 package config_utilities;
 
-import java.util.Vector;
-
 public class Computer {
 	
 	private String name;
@@ -11,6 +9,20 @@ public class Computer {
 	private String macWlan;
 
 	private boolean reachable;
+	private boolean reachabilityChecked;
+	private boolean thisPC;
+	
+	
+	public Computer(){
+		this.reachabilityChecked = false;
+	}
+	
+	public Computer (String name, String macLan, String user){
+		this();
+		this.name = name;
+		this.macLan = macLan;
+		this.user = user;
+	}
 	
 	public String getName() {
 		return name;
@@ -48,12 +60,20 @@ public class Computer {
 	public void setReachable(boolean reachable) {
 		this.reachable = reachable;
 	}
-	
-	public Computer (String name, String macLan, String user){
-		this.name = name;
-		this.macLan = macLan;
-		this.user = user;
+	public boolean isReachabilityChecked() {
+		return reachabilityChecked;
 	}
+	public void setReachabilityChecked(boolean reachabilityChecked) {
+		this.reachabilityChecked = reachabilityChecked;
+	}
+	public boolean isThisPC() {
+		return thisPC;
+	}
+	public void setThisPC(boolean thisPC) {
+		this.thisPC = thisPC;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "Computer [name=" + name + ", macLan=" + macLan + ", user=" + user + ", reachable=" + reachable + "]";

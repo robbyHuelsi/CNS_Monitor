@@ -27,12 +27,15 @@ public class CnsConfig {
 	 * 
 	 */
 
+	private CnsGui gui;
 	private static CnsConfig instance = null;
 	private String file_path = "C:\\Users\\Philipp\\workspace\\CNS_Monitor\\src\\config2.json";
 	private File file;
 
 	private Vector<Computer> all_computers = new Vector<Computer>();
 	private Vector<Module> all_modules = new Vector<Module>();
+	
+	private CnsConfig() {}
 
 	public Vector<Computer> getAll_computers() {
 		return all_computers;
@@ -41,14 +44,16 @@ public class CnsConfig {
 		return all_modules;
 	}
 
-	private CnsConfig() {}
-
 	public static CnsConfig getInstance() {
 		if (instance == null){
 			instance = new CnsConfig();
 
 		}
 		return instance;
+	}
+	
+	public void setGui(CnsGui gui){
+		this.gui = gui;
 	}
 
 	public boolean load(File file){
@@ -66,9 +71,14 @@ public class CnsConfig {
 			while(iterator.hasNext()){
 				JSONObject json_computer = iterator.next();
 				String name = (String) json_computer.get("Name");
-				String mac = (String) json_computer.get("MacLan").toString().toUpperCase();
+				String mac = (String) json_computer.get("MacLan").toString().toUpperCase().replaceAll("-", ":");
 				String user = (String) json_computer.get("User");
-				all_computers.addElement(new Computer( name , mac , user));
+				Computer computer = new Computer( name , mac , user);
+				if (gui.getNetworkMonitor().getOwnMacAddress().equals(mac)) {
+					computer.setThisPC(true);
+				}
+				all_computers.addElement(computer);
+				
 				//System.out.println(all_computers.lastElement());
 			}
 

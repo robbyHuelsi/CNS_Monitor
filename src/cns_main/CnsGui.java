@@ -80,7 +80,7 @@ public class CnsGui extends JFrame{
 				if (col == 0){
 					String name = config.getAll_computers().get(row).getName();
 					String info = "";
-					if (config.getAll_computers().get(row).getMacLan().equals(network_monitor.getOwnMacAddress())) {
+					if (config.getAll_computers().get(row).isThisPC()) {
 						info = " (This computer)";
 					}
 					return (Object) name + info;
@@ -169,15 +169,19 @@ public class CnsGui extends JFrame{
 	public JTable getComputerTable(){
 		return computer_table;
 	}
+	
+	public NetworkMonitor getNetworkMonitor(){
+		return network_monitor;
+	}
 
 	public static void main(String[] args) {
-		
 		CnsConfig config = CnsConfig.getInstance();
 		ModuleMonitor module_monitor = new ModuleMonitor(config);
 		NetworkMonitor network_monitor = new NetworkMonitor(config);
 
 		CnsGui cns_gui = new CnsGui(config, module_monitor, network_monitor);
-		network_monitor.addGui(cns_gui);
+		config.setGui(cns_gui);
+		network_monitor.setGui(cns_gui);
 
 	}
 
