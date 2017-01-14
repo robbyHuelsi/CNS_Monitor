@@ -114,7 +114,7 @@ public class NetworkMonitor {
 	            // when Matcher finds a Line then return it as result
 	            if (m.find()) {
 	                //System.out.println("MAC found");
-	            	String[] macAry = m.group(0).split("\\:",-1);
+	            	String[] macAry = m.group(0).replaceAll("-", ":").split("\\:",-1);
 	            	String mac = "";
 	            	for (String seg : macAry) {
 						if (seg.length() == 1) {
