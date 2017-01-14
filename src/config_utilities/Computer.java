@@ -5,8 +5,14 @@ import java.util.Vector;
 public class Computer {
 	
 	private String name;
+<<<<<<< HEAD
 	private String mac;
 	private String user;
+=======
+	private String macLan;
+	private String macWlan;
+	private String ip;
+>>>>>>> network
 	private boolean reachable;
 	
 	public String getName() {
@@ -26,6 +32,18 @@ public class Computer {
 	}
 	public void setUser(String user) {
 		this.user = user;
+	}
+	public String getMacLan() {
+		return macLan;
+	}
+	public void setMacLan(String macLan) {
+		this.macLan = macLan;
+	}
+	public String getMacWlan() {
+		return macWlan;
+	}
+	public void setMacWlan(String macWlan) {
+		this.macWlan = macWlan;
 	}
 	public boolean isReachable() {
 		return reachable;
