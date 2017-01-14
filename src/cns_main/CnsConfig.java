@@ -66,7 +66,7 @@ public class CnsConfig {
 			while(iterator.hasNext()){
 				JSONObject json_computer = iterator.next();
 				String name = (String) json_computer.get("Name");
-				String mac = (String) json_computer.get("MacLan");
+				String mac = (String) json_computer.get("MacLan").toString().toUpperCase();
 				String user = (String) json_computer.get("User");
 				all_computers.addElement(new Computer( name , mac , user));
 				//System.out.println(all_computers.lastElement());

@@ -113,9 +113,16 @@ public class NetworkMonitor {
 
 	            // when Matcher finds a Line then return it as result
 	            if (m.find()) {
-	                //System.out.println("Found");
-	                //System.out.println("MAC: " + m.group(0));
-	                return m.group(0);
+	                //System.out.println("MAC found");
+	            	String[] macAry = m.group(0).split("\\:",-1);
+	            	String mac = "";
+	            	for (String seg : macAry) {
+						if (seg.length() == 1) {
+							seg = "0" + seg;
+						}
+						mac += seg.toUpperCase() + ":";
+					}
+	                return mac.substring(0, mac.length()-1);
 	            }
 
 	            line = reader.readLine();
