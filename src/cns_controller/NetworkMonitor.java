@@ -30,7 +30,16 @@ public class NetworkMonitor {
 		this.gui = gui;
 	}
 	
-	public boolean checkNetwork(){
+	public NetworkMonitor(CnsConfig config){
+		this.config = config;
+	}
+	
+	public void addGui(CnsGui gui){
+		this.gui = gui;
+	}
+	
+	public boolean startCompleteNetworkCheck(){
+		
 		checkInternetConnection();
 		
 		String ip = getOwnIpAddress();

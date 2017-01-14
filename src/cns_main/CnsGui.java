@@ -77,9 +77,14 @@ public class CnsGui extends JFrame{
 			}
 
 			public Object getValueAt(int row, int col) {
-				if (col == 0)
-					return (Object) config.getAll_computers().get(row).getName();
-				else if (col == 1)
+				if (col == 0){
+					String name = config.getAll_computers().get(row).getName();
+					String info = "";
+					if (config.getAll_computers().get(row).getMacLan().equals(network_monitor.getOwnMacAddress())) {
+						info = " (This computer)";
+					}
+					return (Object) name + info;
+				}else if (col == 1)
 					return (Object) config.getAll_computers().get(row).getMacLan();
 				else if (col == 2)
 					return (Object) config.getAll_computers().get(row).getIp();
@@ -147,7 +152,7 @@ public class CnsGui extends JFrame{
 
 		check_network.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				network_monitor.checkNetwork();
+				network_monitor.startCompleteNetworkCheck();
 				computer_table.updateUI();
 			}
 		});
@@ -166,14 +171,13 @@ public class CnsGui extends JFrame{
 	}
 
 	public static void main(String[] args) {
-		CnsGui cns_gui = null;
 		
 		CnsConfig config = CnsConfig.getInstance();
 		ModuleMonitor module_monitor = new ModuleMonitor(config);
-		NetworkMonitor network_monitor = new NetworkMonitor(config, cns_gui);
+		NetworkMonitor network_monitor = new NetworkMonitor(config);
 
-
-		cns_gui = new CnsGui(config, module_monitor, network_monitor);
+		CnsGui cns_gui = new CnsGui(config, module_monitor, network_monitor);
+		network_monitor.addGui(cns_gui);
 
 	}
 
