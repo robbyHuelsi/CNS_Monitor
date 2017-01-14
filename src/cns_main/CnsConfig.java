@@ -128,4 +128,15 @@ public class CnsConfig {
 
 		return false;
 	}
+	
+	public Computer getThisComputer(){
+		if (!all_computers.isEmpty()) {
+			for (Computer computer : all_computers) {
+				if (computer.isThisPC()) {
+					return computer;
+				}
+			}
+		}
+		return null;
+	}
 }

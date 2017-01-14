@@ -47,6 +47,12 @@ public class NetworkMonitor {
 		checkInternetConnection();
 		
 		String ip = getOwnIpAddress();
+		Computer thisComputer = config.getThisComputer();
+		if (thisComputer != null) {
+			thisComputer.setIp(getOwnIpAddress());
+			gui.getComputerTable().updateUI();
+		}
+		
 		String subnet = ip.substring(ip.indexOf("/")+1, ip.lastIndexOf("."));
 		System.out.println("Subnet: " + subnet);
 		checkAllIpAdressesAsynchronously(subnet);

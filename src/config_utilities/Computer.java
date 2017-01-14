@@ -71,7 +71,7 @@ public class Computer {
 	}
 	public void setThisPC(boolean thisPC) {
 		this.thisPC = thisPC;
-	}
+	} 
 	
 	
 	@Override
