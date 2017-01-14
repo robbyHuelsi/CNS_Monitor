@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cns_main.CnsConfig;
+import cns_main.CnsGui;
 import config_utilities.Computer;
 
 public class NetworkMonitor {
@@ -25,9 +26,11 @@ public class NetworkMonitor {
 	 */
 	
 	private CnsConfig config;
+	private CnsGui gui;
 	
-	public NetworkMonitor(CnsConfig config){
+	public NetworkMonitor(CnsConfig config, CnsGui gui){
 		this.config = config;
+		this.gui = gui;
 	}
 	
 	public boolean all_computers_reachable(){
@@ -35,12 +38,6 @@ public class NetworkMonitor {
 		
 		checkAllIpAdressesAsynchronously();
 
-		
-		Vector<Computer> all_computers = config.getAll_computers();
-		for (Computer computer : all_computers){
-			// TODO check availablity of computer
-			computer.setReachable(true);
-		}
 		return true;
 	}
 	
@@ -64,6 +61,16 @@ public class NetworkMonitor {
 			InetAddress ipAdress = InetAddress.getByName(host);
 			if (ipAdress.isReachable(timeout)){
 				System.out.println(host + ": " + getMac(host));
+				String mac = getMac(host);
+				for (Computer computer : config.getAll_computers()) {
+					if (mac.equals(computer.getMacLan())) {
+						computer.setIp(host);
+						computer.setReachable(true);
+						System.out.println("reachable");
+						gui.getComputerTable().updateUI();
+						return;
+					}
+				}
 			}
 		} catch (IOException e) {
 			return;

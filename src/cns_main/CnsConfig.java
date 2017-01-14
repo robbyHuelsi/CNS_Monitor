@@ -54,7 +54,7 @@ public class CnsConfig {
 	public boolean load(File file){
 		this.file_path = file.getAbsolutePath();
 		this.file = file;
-		System.out.println("load wurde gedruekt!");
+		//System.out.println("load wurde gedruekt!");
 		JSONParser parser = new JSONParser();
 		try{
 			Object obj = parser.parse(new FileReader(file));
@@ -90,26 +90,28 @@ public class CnsConfig {
 				//System.out.println(all_modules.lastElement());
 			}
 
-
-
+			return true;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
 		catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("ERROR occured while Parsing config file!");
+			return false;
 		}
 		//try(FileInputStream inputStream = new FileInputStream("foo.txt")) {     
 		//    String everything = IOUtils.toString(inputStream);
 		// do something with everything string
 		//}
-		return true;
+		//return true;
 	}
 
 	public boolean write(){

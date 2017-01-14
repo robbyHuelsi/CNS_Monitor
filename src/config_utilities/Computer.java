@@ -5,14 +5,11 @@ import java.util.Vector;
 public class Computer {
 	
 	private String name;
-<<<<<<< HEAD
-	private String mac;
+	private String ip;
 	private String user;
-=======
 	private String macLan;
 	private String macWlan;
-	private String ip;
->>>>>>> network
+
 	private boolean reachable;
 	
 	public String getName() {
@@ -21,11 +18,11 @@ public class Computer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getMac() {
-		return mac;
+	public String getIp() {
+		return ip;
 	}
-	public void setMac(String mac) {
-		this.mac = mac;
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 	public String getUser() {
 		return user;
@@ -52,14 +49,14 @@ public class Computer {
 		this.reachable = reachable;
 	}
 	
-	public Computer (String name, String mac, String user){
+	public Computer (String name, String macLan, String user){
 		this.name = name;
-		this.mac = mac;
+		this.macLan = macLan;
 		this.user = user;
 	}
 	@Override
 	public String toString() {
-		return "Computer [name=" + name + ", mac=" + mac + ", user=" + user + ", reachable=" + reachable + "]";
+		return "Computer [name=" + name + ", macLan=" + macLan + ", user=" + user + ", reachable=" + reachable + "]";
 	}
 	
 	
