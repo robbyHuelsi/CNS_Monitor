@@ -64,9 +64,8 @@ public class NetworkMonitor {
 		}
 	}
 	
-	public String getOwnMacAddress(){
+	public boolean isThatAMacAddressOnOfThisComputer(String addressToCheck){
 		try {
-			InetAddress ip = InetAddress.getLocalHost();
 			Vector<String> macs = new Vector<String>();
 			
 			Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
@@ -75,28 +74,25 @@ public class NetworkMonitor {
 				byte[] mac = network.getHardwareAddress();
 				
 				if(mac != null) {
-					System.out.print("Current MAC address : ");
+					//System.out.print("Current MAC address : ");
 					
 					StringBuilder sb = new StringBuilder();
 					for (int i = 0; i < mac.length; i++) {
 						sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
 					}
-					System.out.println(sb.toString());
+					//System.out.println(sb.toString());
 					macs.add(sb.toString());
 				}
 			}
 			
 			if(!macs.isEmpty()){
-				return macs.get(0);
+				return macs.contains(addressToCheck);
 			}else{
-				return "";
+				return false;
 			}
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-			return "";
 		} catch (SocketException e){
 			e.printStackTrace();
-			return "";
+			return false;
 		}
 	}
 	

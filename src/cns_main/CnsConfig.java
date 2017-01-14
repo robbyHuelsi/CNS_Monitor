@@ -74,7 +74,7 @@ public class CnsConfig {
 				String mac = (String) json_computer.get("MacLan").toString().toUpperCase().replaceAll("-", ":");
 				String user = (String) json_computer.get("User");
 				Computer computer = new Computer( name , mac , user);
-				if (gui.getNetworkMonitor().getOwnMacAddress().equals(mac)) {
+				if (gui.getNetworkMonitor().isThatAMacAddressOnOfThisComputer(mac)) {
 					computer.setThisPC(true);
 				}
 				all_computers.addElement(computer);
