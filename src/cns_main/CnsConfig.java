@@ -29,7 +29,6 @@ public class CnsConfig {
 
 	private CnsGui gui;
 	private static CnsConfig instance = null;
-	private String file_path = "C:\\Users\\Philipp\\workspace\\CNS_Monitor\\src\\config2.json";
 	private File file;
 
 	private Vector<Computer> all_computers = new Vector<Computer>();
@@ -56,8 +55,12 @@ public class CnsConfig {
 		this.gui = gui;
 	}
 
+	public boolean load(String path){
+		File file = new File(path);
+		return load(file);
+	}
+	
 	public boolean load(File file){
-		this.file_path = file.getAbsolutePath();
 		this.file = file;
 		//System.out.println("load wurde gedruekt!");
 		JSONParser parser = new JSONParser();
@@ -65,6 +68,8 @@ public class CnsConfig {
 			Object obj = parser.parse(new FileReader(file));
 			JSONObject jsonObject = (JSONObject) obj;
 
+			all_computers.removeAllElements();
+			
 			// read Computers
 			JSONArray computers = (JSONArray) jsonObject.get("Computers");
 			Iterator<JSONObject> iterator = computers.iterator();
@@ -85,6 +90,9 @@ public class CnsConfig {
 			// read Modules
 			JSONArray modules = (JSONArray) jsonObject.get("Modules");
 			iterator = modules.iterator();
+			
+			all_modules.removeAllElements();
+			
 			while(iterator.hasNext()){
 				JSONObject json_module = iterator.next();
 				String name = (String) json_module.get("Name");
