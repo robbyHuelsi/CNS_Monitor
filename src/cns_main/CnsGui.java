@@ -166,6 +166,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 							computer_table.updateUI();
 							module_table.updateUI();
 							check_network.setEnabled(true);
+							start_modules.setEnabled(true);
 							setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
 							loadConfigCombo.updateUI();
 						}
@@ -177,6 +178,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 						computer_table.updateUI();
 						module_table.updateUI();
 						check_network.setEnabled(true);
+						start_modules.setEnabled(true);
 						setting.addRecentOpenConfig(e.getItem().toString());
 						loadConfigCombo.updateUI();
 					}

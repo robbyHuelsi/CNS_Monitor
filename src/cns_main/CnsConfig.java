@@ -100,11 +100,14 @@ public class CnsConfig {
 				Computer computer = null;
 				int port = Integer.parseInt( (String) json_module.get("Port"));
 				String command = (String) json_module.get("Command");
+				System.out.println("command of "+name+": "+command);
 				for (Computer computer_temp : all_computers){
 					if (computer_temp.getName().equals(computer_string))
 						computer = computer_temp;
 				}
 				all_modules.addElement(new Module(name, port, computer));
+				if (!command.isEmpty())
+					all_modules.lastElement().setCommand(command);
 				//System.out.println(all_modules.lastElement());
 			}
 
