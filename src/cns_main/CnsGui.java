@@ -64,7 +64,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		// Load Config Combo Box
 		MyLoadFileComboBoxModel loadConfigComboModel = new MyLoadFileComboBoxModel();
 		JComboBox<String> loadConfigCombo = new JComboBox<String>(loadConfigComboModel);             
-		loadConfigCombo.setPrototypeDisplayValue(loadConfigComboModel.getHeader().toString());
+		//loadConfigCombo.setPrototypeDisplayValue(loadConfigComboModel.getHeader().toString());
 		
 		
 		JButton check_network = new JButton ("Check Network");
@@ -182,33 +182,6 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					}
 					loadConfigCombo.setSelectedItem(loadConfigComboModel.getHeader());
 				}	
-			}
-		});
-		
-		loadConfigCombo.addPopupMenuListener(new PopupMenuListener() {
-			
-			@Override
-			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-				JComboBox box = (JComboBox) e.getSource();
-			    Object comp = box.getUI().getAccessibleChild(box, 0);
-			    if (!(comp instanceof JPopupMenu)) return;
-			    JComponent scrollPane = (JComponent) ((JPopupMenu) comp).getComponent(0);
-			    Dimension size = new Dimension();
-			    size.width = box.getPreferredSize().width;
-			    size.height = scrollPane.getPreferredSize().height;
-			    scrollPane.setPreferredSize(size);
-			}
-			
-			@Override
-			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void popupMenuCanceled(PopupMenuEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 
