@@ -26,7 +26,7 @@
 			"Name":"Brain",
 			"Computer":"Nuc2",
 			"Port":"50000",
-			"Command":""
+			"Command":"git status"
 		},
 		{
 			"Name":"VBrain",
