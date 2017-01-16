@@ -47,15 +47,21 @@ public class NetworkMonitor {
 		checkInternetConnection();
 		
 		String ip = getOwnIpAddress();
+		System.out.println("This IP: " + ip);
+		
+		// Set own IP
 		Computer thisComputer = config.getThisComputer();
 		if (thisComputer != null) {
 			String mac = getMacAddress(ip);
+			System.out.println("This MAC: " + mac);
 			if (thisComputer.getMacLan().equals(mac)) {
 				thisComputer.setIpLan(ip);
+				System.out.println("This MAC is for LAN");
 				gui.getComputerTable().updateUI();
 			}else if (thisComputer.getMacWlan().equals(mac)) {
 				thisComputer.setIpWlan(ip);
 				gui.getComputerTable().updateUI();
+				System.out.println("This MAC is for WLAN");
 			}
 		}
 		
@@ -155,11 +161,11 @@ public class NetworkMonitor {
 				String mac = getMacAddress(host);
 				for (Computer computer : config.getAll_computers()) {
 					if (!computer.getMacLan().isEmpty() && mac.equals(computer.getMacLan())) {
-						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers Ã¼berein.
+						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers überein.
 						// Diese Computer ist per LAN verbunden.
-						// Es kann sein, wenn der PC mit WLAN UND LAN verbunden ist, dass die MAC vom LAN zurÃ¼ckgegeben wird.
-						// In diesem Fall kann nicht eindeutig bestimmt werden, welche Mac zu LAN oder WLAN gehÃ¶rt. Daher wird die erste gefundene Adresse als LAN und die zweite als WLAN gespeichert.
-						// ==> Sollte die WLAN-IP-Adresse kleiner als die von LAN sein, ist die Reihenfolge falsch.
+						// Es kann sein, wenn der PC mit WLAN UND LAN verbunden ist, dass die MAC vom LAN zurückgegeben wird.
+						// In diesem Fall kann nicht eindeutig bestimmt werden, welche Mac zu LAN oder WLAN gehört. Daher wird die Adresse, wie zuerst reagierte, als LAN und die zweite als WLAN gespeichert.
+						// ==> Sollte der PC schneller Über WLAN als über LAN reagierte, ist die Reihenfolge falsch.
 						if (computer.getIpLan().isEmpty()) {
 							computer.setIpLan(host);
 							//computer.setReachableLan(true);
