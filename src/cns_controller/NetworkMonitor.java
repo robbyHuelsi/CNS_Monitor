@@ -49,8 +49,14 @@ public class NetworkMonitor {
 		String ip = getOwnIpAddress();
 		Computer thisComputer = config.getThisComputer();
 		if (thisComputer != null) {
-			//thisComputer.setIp(getOwnIpAddress());
-			//gui.getComputerTable().updateUI();
+			String mac = getMacAddress(ip);
+			if (thisComputer.getMacLan().equals(mac)) {
+				thisComputer.setIpLan(ip);
+				gui.getComputerTable().updateUI();
+			}else if (thisComputer.getMacWlan().equals(mac)) {
+				thisComputer.setIpWlan(ip);
+				gui.getComputerTable().updateUI();
+			}
 		}
 		
 		String subnet = ip.substring(ip.indexOf("/")+1, ip.lastIndexOf("."));
