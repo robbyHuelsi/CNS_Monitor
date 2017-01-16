@@ -27,7 +27,7 @@ public class NetworkMonitor {
 	private CnsConfig config;
 	private CnsGui gui;
 	
-	
+	private int countCheckedIps;
 	
 	public NetworkMonitor(CnsConfig config, CnsGui gui){
 		this.config = config;
@@ -43,14 +43,26 @@ public class NetworkMonitor {
 	}
 	
 	public boolean startCompleteNetworkCheck(){
-		
+		config.resetAllComputersIps();
 		checkInternetConnection();
 		
 		String ip = getOwnIpAddress();
+		System.out.println("This IP: " + ip);
+		String mac = getOwnMacAddress();
+		
+		// Set own IP and write into right Computer for LAN or WLAN
 		Computer thisComputer = config.getThisComputer();
+		System.out.println("This MAC: " + mac);
 		if (thisComputer != null) {
-			thisComputer.setIp(getOwnIpAddress());
-			gui.getComputerTable().updateUI();
+			if (thisComputer.getMacLan().equals(mac)) {
+				thisComputer.setIpLan(ip);
+				System.out.println("This MAC is for LAN");
+				gui.getComputerTable().updateUI();
+			}else if (thisComputer.getMacWlan().equals(mac)) {
+				thisComputer.setIpWlan(ip);
+				gui.getComputerTable().updateUI();
+				System.out.println("This MAC is for WLAN");
+			}
 		}
 		
 		String subnet = ip.substring(ip.indexOf("/")+1, ip.lastIndexOf("."));
@@ -60,48 +72,6 @@ public class NetworkMonitor {
 		return true;
 	}
 	
-	public String getOwnIpAddress(){
-		try {
-			String ip = InetAddress.getLocalHost().toString();
-			return ip.substring(ip.indexOf("/")+1);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
-		}
-	}
-	
-	public boolean isThatAMacAddressOnOfThisComputer(String addressToCheck){
-		try {
-			Vector<String> macs = new Vector<String>();
-			
-			Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
-			while(networks.hasMoreElements()) {
-				NetworkInterface network = networks.nextElement();
-				byte[] mac = network.getHardwareAddress();
-				
-				if(mac != null) {
-					//System.out.print("Current MAC address : ");
-					
-					StringBuilder sb = new StringBuilder();
-					for (int i = 0; i < mac.length; i++) {
-						sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
-					}
-					//System.out.println(sb.toString());
-					macs.add(sb.toString());
-				}
-			}
-			
-			if(!macs.isEmpty()){
-				return macs.contains(addressToCheck);
-			}else{
-				return false;
-			}
-		} catch (SocketException e){
-			e.printStackTrace();
-			return false;
-		}
-	}
 	
 	public boolean checkInternetConnection(){
 		int timeout = 2000;
@@ -124,12 +94,16 @@ public class NetworkMonitor {
 	
 	private void checkAllIpAdressesAsynchronously(String subnet){
 		int timeout = 2000;
+		countCheckedIps = 0;
 		
 		for (int i=1;i<255;i++){
 			String host = subnet + "." + i;			
 			new Thread(new Runnable() {
 			    public void run() {
 			    	checkIsReachable(host, timeout);
+			    	if(++countCheckedIps >= 254){
+						config.setAllComputersReachabilityChecked();
+					}
 			    }
 			}).start();
 		}
@@ -141,19 +115,85 @@ public class NetworkMonitor {
 			InetAddress ipAdress = InetAddress.getByName(host);
 			if (ipAdress.isReachable(timeout)){
 				String mac = getMacAddress(host);
-				System.out.println(host + ": " + mac);
 				for (Computer computer : config.getAll_computers()) {
-					if (mac.equals(computer.getMacLan())) {
-						computer.setIp(host);
-						computer.setReachable(true);
-						System.out.println("reachable");
+					if (!computer.getMacLan().isEmpty() && mac.equals(computer.getMacLan())) {
+						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers ueberein.
+						// Diese Computer ist per LAN verbunden.
+						// Es kann sein, wenn der PC mit WLAN UND LAN verbunden ist, dass die MAC vom LAN zurueckgegeben wird.
+						// In diesem Fall kann nicht eindeutig bestimmt werden, welche Mac zu LAN oder WLAN gehoert. Daher wird die Adresse, wie zuerst reagierte, als LAN und die zweite als WLAN gespeichert.
+						// ==> Sollte der PC schneller ueber WLAN als aber LAN reagierte, ist die Reihenfolge falsch.
+						if (computer.getIpLan().isEmpty()) {
+							computer.setIpLan(host);
+							computer.setReachabilityChecked(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via LAN)");
+						}else if (computer.getIpWlan().isEmpty()) {
+							computer.setIpWlan(host);
+							computer.setReachabilityChecked(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via WLAN)");
+						}
+						gui.getComputerTable().updateUI();
+						
+						return;
+					}
+					if (!computer.getMacWlan().isEmpty() && mac.equals(computer.getMacWlan())) {
+						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers überein.
+						// Diese Computer ist per LAN verbunden.
+						if (computer.getIpWlan().isEmpty()) {
+							computer.setIpWlan(host);
+							//computer.setReachableWlan(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via WLAN)");
+						}else if (computer.getIpLan().isEmpty()) {
+							computer.setIpLan(host);
+							//computer.setReachableLan(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via LAN)");
+						}
 						gui.getComputerTable().updateUI();
 						return;
 					}
 				}
+				System.out.println(host + ": " + mac + " (unknown)");
 			}
 		} catch (IOException e) {
 			return;
+		}
+	}
+	
+	
+	public boolean isThatAMacAddressOnOfThisComputer(String macLan, String macWlan){
+		try {
+			Vector<String> macs = new Vector<String>();
+			
+			Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
+			while(networks.hasMoreElements()) {
+				NetworkInterface network = networks.nextElement();
+				byte[] mac = network.getHardwareAddress();
+				
+				if(mac != null) {
+					//System.out.print("Current MAC address : ");
+					
+					StringBuilder sb = new StringBuilder();
+					for (int i = 0; i < mac.length; i++) {
+						sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : ""));
+					}
+					//System.out.println(sb.toString());
+					macs.add(sb.toString());
+				}
+			}
+			
+			if(!macs.isEmpty()){
+				if (macLan != null && !macLan.isEmpty() && macs.contains(macLan)) {
+					return true;
+				}else if(macWlan != null && !macWlan.isEmpty() && macs.contains(macWlan)){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		} catch (SocketException e){
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -218,4 +258,45 @@ public class NetworkMonitor {
 	    return "";
 	}
 
+	public String getOwnIpAddress(){
+		try {
+			String ip = InetAddress.getLocalHost().toString();
+			return ip.substring(ip.indexOf("/")+1);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	public String getOwnMacAddress(){
+		try {
+			NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+			byte[] mac = network.getHardwareAddress();
+			
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}
+			
+			String[] macAry = sb.toString().replaceAll("-", ":").split("\\:",-1);
+        	String macString = "";
+        	for (String seg : macAry) {
+				if (seg.length() == 1) {
+					seg = "0" + seg;
+				}
+				macString += seg.toUpperCase() + ":";
+			}
+            return macString.substring(0, macString.length()-1);
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return "";
+		} catch (SocketException e){
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
 }
+

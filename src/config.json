@@ -10,13 +10,13 @@
 		{
 			"Name":"Nuc1",
 			"MacLan":"B8:AE:ED:7E:FE:60",
-			"MacWlan":"",
+			"MacWlan":"00:21:5C:C7:D9:04",
 			"User":"leonie"
 		},
 		{
 			"Name":"Nuc2",
 			"MacLan":"B8:AE:ED:7E:EE:78",
-			"MacWlan":"",
+			"MacWlan":"00:21:5C:CD:E6:D7",
 			"User":"leonie"
 		}
 	],

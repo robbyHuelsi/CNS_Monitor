@@ -1,5 +1,6 @@
 package cns_main;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,8 @@ import javax.swing.JTable;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -97,23 +100,32 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public Object getValueAt(int row, int col) {
 				if (col == 0){
 					String name = config.getAll_computers().get(row).getName();
-					String info = "";
-					if (config.getAll_computers().get(row).isThisPC()) {
-						info = " (This computer)";
-					}
-					return (Object) name + info;
+//					String info = "";
+//					if (config.getAll_computers().get(row).isThisPC()) {
+//						info = " (This computer)";
+//					}
+					return (Object) name;
 				}else if (col == 1)
-					return (Object) config.getAll_computers().get(row).getMacLan();
+					return (Object) config.getAll_computers().get(row).getMacInfoText();
 				else if (col == 2)
-					return (Object) config.getAll_computers().get(row).getIp();
+					return (Object) config.getAll_computers().get(row).getIpInfoText();
 				else if (col == 3)
 					return (Object) config.getAll_computers().get(row).getUser();
 				else
-					return (Object) config.getAll_computers().get(row).isReachable();
+					return (Object) config.getAll_computers().get(row).isReachableInfoText();
 			}
 		}
 		
-		computer_table = new JTable(new MyComputerTableModel());
+		computer_table = new JTable(new MyComputerTableModel()){
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		        return component;
+	        }
+		};
+
 		computer_table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
 		//Build Module Table
@@ -142,7 +154,16 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					return (Object) config.getAll_modules().get(row).getListeningPort();
 			}
 		}
-		module_table = new JTable(new MyModuleTableModel());
+		module_table = new JTable(new MyModuleTableModel()){
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		        return component;
+	        }
+		};
+		
 		module_table.setPreferredScrollableViewportSize(new Dimension(500, 250));
 
 		JPanel tables = new JPanel(new GridLayout(2,1));

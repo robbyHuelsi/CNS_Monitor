@@ -3,12 +3,11 @@ package config_utilities;
 public class Computer {
 	
 	private String name;
-	private String ip;
+	private String ipLan, ipWlan;
 	private String user;
-	private String macLan;
-	private String macWlan;
+	private String macLan,macWlan;
 
-	private boolean reachable;
+	//private boolean reachableLan, reachableWlan;
 	private boolean reachabilityChecked;
 	private boolean thisPC;
 	
@@ -17,10 +16,11 @@ public class Computer {
 		this.reachabilityChecked = false;
 	}
 	
-	public Computer (String name, String macLan, String user){
+	public Computer (String name, String macLan, String macWlan, String user){
 		this();
 		this.name = name;
 		this.macLan = macLan;
+		this.macWlan = macWlan;
 		this.user = user;
 	}
 	
@@ -30,11 +30,17 @@ public class Computer {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getIp() {
-		return ip;
+	public String getIpLan() {
+		return ipLan;
 	}
-	public void setIp(String ip) {
-		this.ip = ip;
+	public void setIpLan(String ip) {
+		this.ipLan = ip;
+	}
+	public String getIpWlan() {
+		return ipWlan;
+	}
+	public void setIpWlan(String ip) {
+		this.ipWlan = ip;
 	}
 	public String getUser() {
 		return user;
@@ -54,12 +60,28 @@ public class Computer {
 	public void setMacWlan(String macWlan) {
 		this.macWlan = macWlan;
 	}
-	public boolean isReachable() {
-		return reachable;
+	
+	/*public String getMac(){
+		if (macLan != null && !macLan.isEmpty()) {
+			return macLan;
+		}else{
+			return macWlan;
+		}
+	}*/
+	
+	/*public boolean isReachableLan() {
+		return reachableLan;
 	}
-	public void setReachable(boolean reachable) {
-		this.reachable = reachable;
+	public void setReachableLan(boolean reachable) {
+		this.reachableLan = reachable;
 	}
+	public boolean isReachableWlan() {
+		return reachableWlan;
+	}
+	public void setReachableWlan(boolean reachable) {
+		this.reachableWlan = reachable;
+	}*/
+	
 	public boolean isReachabilityChecked() {
 		return reachabilityChecked;
 	}
@@ -71,13 +93,61 @@ public class Computer {
 	}
 	public void setThisPC(boolean thisPC) {
 		this.thisPC = thisPC;
-	} 
+	}
 	
+	public String getIpInfoText(){
+		if (ipLan != null && !ipLan.isEmpty() && ipWlan != null && !ipWlan.isEmpty()){
+			return ipLan + " / (" + ipWlan + ")";
+		}else if(ipLan != null && !ipLan.isEmpty()){
+			return ipLan;
+		}else if(ipWlan != null && !ipWlan.isEmpty()){
+			return "(" + ipWlan + ")";
+		}else{
+			return "";
+		}
+	}
 	
+	public String getMacInfoText(){
+		if (macLan != null && !macLan.isEmpty() && macWlan != null && !macWlan.isEmpty()){
+			return macLan + " / (" + macWlan + ")";
+		}else if(macLan != null && !macLan.isEmpty()){
+			return macLan;
+		}else if(macWlan != null && !macWlan.isEmpty()){
+			return "(" + macWlan + ")";
+		}else{
+			return "";
+		}
+	}
+	
+	public String isReachableInfoText(){
+		if (thisPC) {
+			return "This Computer";
+		}else if(!reachabilityChecked){
+			return "";
+		}else if(!ipLan.isEmpty() && !ipWlan.isEmpty()){
+			return "LAN & WLAN";
+		}else if(!ipLan.isEmpty()){
+			return "LAN";
+		}else if(!ipWlan.isEmpty()){
+			return "WLAN";
+		}else{
+			return "false";
+		}
+	}
+
 	@Override
 	public String toString() {
-		return "Computer [name=" + name + ", macLan=" + macLan + ", user=" + user + ", reachable=" + reachable + "]";
+		return "Computer [name=" + name + ", ipLan=" + ipLan + ", ipWlan=" + ipWlan + ", user=" + user + ", macLan="
+				+ macLan + ", macWlan=" + macWlan + ", reachabilityChecked=" + reachabilityChecked + ", thisPC="
+				+ thisPC + "]";
 	}
+
+	
+
+	
+	
+	
+	
 	
 	
 	//TODO
