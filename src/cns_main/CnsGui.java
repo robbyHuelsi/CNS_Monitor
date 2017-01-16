@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -17,10 +19,13 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
+import javax.swing.Action;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -96,7 +101,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public String getColumnName(int col) {
 				return columnNames[col];
 			}
-
+			
 			public Object getValueAt(int row, int col) {
 				if (col == 0){
 					String name = config.getAll_computers().get(row).getName();
@@ -131,7 +136,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		//Build Module Table
 		class MyModuleTableModel extends AbstractTableModel {
 			private static final long serialVersionUID = 1L;
-			String[] columnNames = { "Name", "Computer", "Port" };
+			String[] columnNames = { "Name", "Computer", "Port", "", "" };
 
 			public int getColumnCount() {
 				return columnNames.length;
@@ -145,14 +150,28 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				return columnNames[col];
 			}
 
+			public boolean isCellEditable(int row, int col)
+		      {
+				if ( col==3 || col==4)
+					return true;
+				else
+					return false;
+				}
+
+
 			public Object getValueAt(int row, int col) {
 				if (col == 0)
 					return (Object) config.getAll_modules().get(row).getName();
 				else if (col == 1)
 					return (Object) config.getAll_modules().get(row).getComputer().getName();
-				else //if (col == 2)
+				else if (col == 2)
 					return (Object) config.getAll_modules().get(row).getListeningPort();
+				else if (col == 3)
+					return (Object) "Start";
+				else
+					return (Object) "Show output";
 			}
+						
 		}
 		module_table = new JTable(new MyModuleTableModel()){
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -163,6 +182,33 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		        return component;
 	        }
 		};
+		Action start_module = new AbstractAction()
+		{
+
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e)
+		    {
+		        int modelRow = Integer.valueOf( e.getActionCommand() );
+		        System.out.println("Starting!! pressed row: "+modelRow);
+		    }
+		};
+		Action show_module_output = new AbstractAction()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e)
+		    {
+		        int modelRow = Integer.valueOf( e.getActionCommand() );
+		        System.out.println("Show output!! pressed row: "+modelRow);
+		    }
+		};
+		
+		//see: tips4java.wordpress.com/2009/07/12/table-button-column/
+		ButtonColumn bc3 = new ButtonColumn (module_table, start_module, 3 );
+		ButtonColumn bc4 = new ButtonColumn (module_table, show_module_output, 4 );
+		bc3.setMnemonic(KeyEvent.VK_D);
+		bc4.setMnemonic(KeyEvent.VK_D);
 		
 		module_table.setPreferredScrollableViewportSize(new Dimension(500, 250));
 
