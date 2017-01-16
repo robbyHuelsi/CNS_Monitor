@@ -149,17 +149,17 @@ public class NetworkMonitor {
 				String mac = getMacAddress(host);
 				System.out.println(host + ": " + mac);
 				for (Computer computer : config.getAll_computers()) {
-					if (mac.equals(computer.getMacLan())) {
+					if (!computer.getMacLan().isEmpty() && mac.equals(computer.getMacLan())) {
 						computer.setIpLan(host);
 						computer.setReachableLan(true);
 						System.out.println("reachable via LAN");
 						gui.getComputerTable().updateUI();
 						return;
 					}
-					if (mac.equals(computer.getMacWlan())) {
+					if (!computer.getMacWlan().isEmpty() && mac.equals(computer.getMacWlan())) {
 						computer.setIpWlan(host);
 						computer.setReachableWlan(true);
-						System.out.println("reachable vial WLAN");
+						System.out.println("reachable via WLAN");
 						gui.getComputerTable().updateUI();
 						return;
 					}
