@@ -26,7 +26,7 @@
 			"Name":"Brain",
 			"Computer":"Nuc2",
 			"Port":"50000",
-			"Command":"git status"
+			"Command":"ping www.google.de"
 		},
 		{
 			"Name":"VBrain",
@@ -44,7 +44,7 @@
 			"Name":"TrackingZoomC",
 			"Computer":"Main",
 			"Port":"50009",
-			"Command":""
+			"Command":"ping www.wikipedia.org"
 		},
 		{
 			"Name":"EmotionDetection",
