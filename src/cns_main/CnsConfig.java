@@ -151,4 +151,11 @@ public class CnsConfig {
 		}
 		return null;
 	}
+	
+	public void resetAllIps(){
+		for (Computer computer : all_computers) {
+			computer.setIpLan("");
+			computer.setIpWlan("");
+		}
+	}
 }

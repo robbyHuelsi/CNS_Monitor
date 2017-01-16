@@ -43,7 +43,7 @@ public class NetworkMonitor {
 	}
 	
 	public boolean startCompleteNetworkCheck(){
-		
+		config.resetAllIps();
 		checkInternetConnection();
 		
 		String ip = getOwnIpAddress();
@@ -147,23 +147,42 @@ public class NetworkMonitor {
 			InetAddress ipAdress = InetAddress.getByName(host);
 			if (ipAdress.isReachable(timeout)){
 				String mac = getMacAddress(host);
-				System.out.println(host + ": " + mac);
 				for (Computer computer : config.getAll_computers()) {
 					if (!computer.getMacLan().isEmpty() && mac.equals(computer.getMacLan())) {
-						computer.setIpLan(host);
-						computer.setReachableLan(true);
-						System.out.println("reachable via LAN");
+						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers überein.
+						// Diese Computer ist per LAN verbunden.
+						// Es kann sein, wenn der PC mit WLAN UND LAN verbunden ist, dass die MAC vom LAN zurückgegeben wird.
+						// In diesem Fall kann nicht eindeutig bestimmt werden, welche Mac zu LAN oder WLAN gehört. Daher wird die erste gefundene Adresse als LAN und die zweite als WLAN gespeichert.
+						// ==> Sollte die WLAN-IP-Adresse kleiner als die von LAN sein, ist die Reihenfolge falsch.
+						if (computer.getIpLan().isEmpty()) {
+							computer.setIpLan(host);
+							//computer.setReachableLan(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via LAN)");
+						}else if (computer.getIpWlan().isEmpty()) {
+							computer.setIpWlan(host);
+							//computer.setReachableWlan(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via WLAN)");
+						}
 						gui.getComputerTable().updateUI();
 						return;
 					}
 					if (!computer.getMacWlan().isEmpty() && mac.equals(computer.getMacWlan())) {
-						computer.setIpWlan(host);
-						computer.setReachableWlan(true);
-						System.out.println("reachable via WLAN");
+						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers überein.
+						// Diese Computer ist per LAN verbunden.
+						if (computer.getIpWlan().isEmpty()) {
+							computer.setIpWlan(host);
+							//computer.setReachableWlan(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via WLAN)");
+						}else if (computer.getIpLan().isEmpty()) {
+							computer.setIpLan(host);
+							//computer.setReachableLan(true);
+							System.out.println(host + ": " + mac + " (" + computer.getName() + " via LAN)");
+						}
 						gui.getComputerTable().updateUI();
 						return;
 					}
 				}
+				System.out.println(host + ": " + mac + " (unknown)");
 			}
 		} catch (IOException e) {
 			return;

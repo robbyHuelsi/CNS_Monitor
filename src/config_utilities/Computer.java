@@ -7,7 +7,7 @@ public class Computer {
 	private String user;
 	private String macLan,macWlan;
 
-	private boolean reachableLan, reachableWlan;
+	//private boolean reachableLan, reachableWlan;
 	private boolean reachabilityChecked;
 	private boolean thisPC;
 	
@@ -69,7 +69,7 @@ public class Computer {
 		}
 	}*/
 	
-	public boolean isReachableLan() {
+	/*public boolean isReachableLan() {
 		return reachableLan;
 	}
 	public void setReachableLan(boolean reachable) {
@@ -80,7 +80,8 @@ public class Computer {
 	}
 	public void setReachableWlan(boolean reachable) {
 		this.reachableWlan = reachable;
-	}
+	}*/
+	
 	public boolean isReachabilityChecked() {
 		return reachabilityChecked;
 	}
@@ -106,16 +107,28 @@ public class Computer {
 		}
 	}
 	
+	public String getMacInfoText(){
+		if (macLan != null && !macLan.isEmpty() && macWlan != null && !macWlan.isEmpty()){
+			return macLan + " / (" + macWlan + ")";
+		}else if(macLan != null && !macLan.isEmpty()){
+			return macLan;
+		}else if(macWlan != null && !macWlan.isEmpty()){
+			return "(" + macWlan + ")";
+		}else{
+			return "";
+		}
+	}
+	
 	public String isReachableInfoText(){
 		if (thisPC) {
 			return "This Computer";
 		}else if(!reachabilityChecked){
 			return "";
-		}else if(reachableLan && reachableWlan){
+		}else if(!ipLan.isEmpty() && !ipWlan.isEmpty()){
 			return "LAN & WLAN";
-		}else if(reachableLan){
+		}else if(!ipLan.isEmpty()){
 			return "LAN";
-		}else if(reachableWlan){
+		}else if(!ipWlan.isEmpty()){
 			return "WLAN";
 		}else{
 			return "false";
@@ -125,9 +138,11 @@ public class Computer {
 	@Override
 	public String toString() {
 		return "Computer [name=" + name + ", ipLan=" + ipLan + ", ipWlan=" + ipWlan + ", user=" + user + ", macLan="
-				+ macLan + ", macWlan=" + macWlan + ", reachableLan=" + reachableLan + ", reachableWlan="
-				+ reachableWlan + ", reachabilityChecked=" + reachabilityChecked + ", thisPC=" + thisPC + "]";
+				+ macLan + ", macWlan=" + macWlan + ", reachabilityChecked=" + reachabilityChecked + ", thisPC="
+				+ thisPC + "]";
 	}
+
+	
 
 	
 	

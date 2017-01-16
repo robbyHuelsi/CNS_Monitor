@@ -103,7 +103,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					}
 					return (Object) name + info;
 				}else if (col == 1)
-					return (Object) config.getAll_computers().get(row).getMacLan();
+					return (Object) config.getAll_computers().get(row).getMacInfoText();
 				else if (col == 2)
 					return (Object) config.getAll_computers().get(row).getIpInfoText();
 				else if (col == 3)
