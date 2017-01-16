@@ -1,5 +1,6 @@
 package cns_main;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,8 @@ import javax.swing.JTable;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -101,7 +104,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 //					if (config.getAll_computers().get(row).isThisPC()) {
 //						info = " (This computer)";
 //					}
-					return (Object) name + info;
+					return (Object) name;
 				}else if (col == 1)
 					return (Object) config.getAll_computers().get(row).getMacInfoText();
 				else if (col == 2)
@@ -113,7 +116,16 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			}
 		}
 		
-		computer_table = new JTable(new MyComputerTableModel());
+		computer_table = new JTable(new MyComputerTableModel()){
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		        return component;
+	        }
+		};
+
 		computer_table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 
 		//Build Module Table
@@ -142,7 +154,16 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					return (Object) config.getAll_modules().get(row).getListeningPort();
 			}
 		}
-		module_table = new JTable(new MyModuleTableModel());
+		module_table = new JTable(new MyModuleTableModel()){
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+				Component component = super.prepareRenderer(renderer, row, column);
+				int rendererWidth = component.getPreferredSize().width;
+				TableColumn tableColumn = getColumnModel().getColumn(column);
+				tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+		        return component;
+	        }
+		};
+		
 		module_table.setPreferredScrollableViewportSize(new Dimension(500, 250));
 
 		JPanel tables = new JPanel(new GridLayout(2,1));
