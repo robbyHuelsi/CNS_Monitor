@@ -92,7 +92,16 @@ public class NetworkMonitor {
 			for (int i = 0; i < mac.length; i++) {
 				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
 			}
-			return sb.toString();
+			
+			String[] macAry = sb.toString().replaceAll("-", ":").split("\\:",-1);
+        	String macString = "";
+        	for (String seg : macAry) {
+				if (seg.length() == 1) {
+					seg = "0" + seg;
+				}
+				macString += seg.toUpperCase() + ":";
+			}
+            return macString.substring(0, macString.length()-1);
 
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
