@@ -48,12 +48,12 @@ public class NetworkMonitor {
 		
 		String ip = getOwnIpAddress();
 		System.out.println("This IP: " + ip);
+		String mac = getOwnMacAddress();
 		
 		// Set own IP
 		Computer thisComputer = config.getThisComputer();
+		System.out.println("This MAC: " + mac);
 		if (thisComputer != null) {
-			String mac = getMacAddress(ip);
-			System.out.println("This MAC: " + mac);
 			if (thisComputer.getMacLan().equals(mac)) {
 				thisComputer.setIpLan(ip);
 				System.out.println("This MAC is for LAN");
@@ -82,6 +82,27 @@ public class NetworkMonitor {
 			return "";
 		}
 	}
+	
+	public String getOwnMacAddress(){
+		try {
+			NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+			byte[] mac = network.getHardwareAddress();
+			
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mac.length; i++) {
+				sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+			}
+			return sb.toString();
+
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			return "";
+		} catch (SocketException e){
+			e.printStackTrace();
+			return "";
+		}
+	}
+
 	
 	public boolean isThatAMacAddressOnOfThisComputer(String macLan, String macWlan){
 		try {
@@ -161,11 +182,11 @@ public class NetworkMonitor {
 				String mac = getMacAddress(host);
 				for (Computer computer : config.getAll_computers()) {
 					if (!computer.getMacLan().isEmpty() && mac.equals(computer.getMacLan())) {
-						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers überein.
+						// Die die Mac-Adresse des Hosts stimmt mit der eines Computers ueberein.
 						// Diese Computer ist per LAN verbunden.
-						// Es kann sein, wenn der PC mit WLAN UND LAN verbunden ist, dass die MAC vom LAN zurückgegeben wird.
-						// In diesem Fall kann nicht eindeutig bestimmt werden, welche Mac zu LAN oder WLAN gehört. Daher wird die Adresse, wie zuerst reagierte, als LAN und die zweite als WLAN gespeichert.
-						// ==> Sollte der PC schneller Über WLAN als über LAN reagierte, ist die Reihenfolge falsch.
+						// Es kann sein, wenn der PC mit WLAN UND LAN verbunden ist, dass die MAC vom LAN zurueckgegeben wird.
+						// In diesem Fall kann nicht eindeutig bestimmt werden, welche Mac zu LAN oder WLAN gehoert. Daher wird die Adresse, wie zuerst reagierte, als LAN und die zweite als WLAN gespeichert.
+						// ==> Sollte der PC schneller ueber WLAN als aber LAN reagierte, ist die Reihenfolge falsch.
 						if (computer.getIpLan().isEmpty()) {
 							computer.setIpLan(host);
 							//computer.setReachableLan(true);
