@@ -76,10 +76,11 @@ public class CnsConfig {
 			while(iterator.hasNext()){
 				JSONObject json_computer = iterator.next();
 				String name = (String) json_computer.get("Name");
-				String mac = (String) json_computer.get("MacLan").toString().toUpperCase().replaceAll("-", ":");
+				String macLan = (String) json_computer.get("MacLan").toString().toUpperCase().replaceAll("-", ":");
+				String macWlan = (String) json_computer.get("MacWlan").toString().toUpperCase().replaceAll("-", ":");
 				String user = (String) json_computer.get("User");
-				Computer computer = new Computer( name , mac , user);
-				if (gui.getNetworkMonitor().isThatAMacAddressOnOfThisComputer(mac)) {
+				Computer computer = new Computer(name, macLan, macWlan, user);
+				if (gui.getNetworkMonitor().isThatAMacAddressOnOfThisComputer(macLan, macWlan)) {
 					computer.setThisPC(true);
 				}
 				all_computers.addElement(computer);

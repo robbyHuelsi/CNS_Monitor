@@ -105,11 +105,11 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				}else if (col == 1)
 					return (Object) config.getAll_computers().get(row).getMacLan();
 				else if (col == 2)
-					return (Object) config.getAll_computers().get(row).getIp();
+					return (Object) config.getAll_computers().get(row).getIpInfoText();
 				else if (col == 3)
 					return (Object) config.getAll_computers().get(row).getUser();
 				else
-					return (Object) config.getAll_computers().get(row).isReachable();
+					return (Object) config.getAll_computers().get(row).isReachableInfoText();
 			}
 		}
 		

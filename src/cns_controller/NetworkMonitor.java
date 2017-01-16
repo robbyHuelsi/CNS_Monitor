@@ -49,8 +49,8 @@ public class NetworkMonitor {
 		String ip = getOwnIpAddress();
 		Computer thisComputer = config.getThisComputer();
 		if (thisComputer != null) {
-			thisComputer.setIp(getOwnIpAddress());
-			gui.getComputerTable().updateUI();
+			//thisComputer.setIp(getOwnIpAddress());
+			//gui.getComputerTable().updateUI();
 		}
 		
 		String subnet = ip.substring(ip.indexOf("/")+1, ip.lastIndexOf("."));
@@ -71,7 +71,7 @@ public class NetworkMonitor {
 		}
 	}
 	
-	public boolean isThatAMacAddressOnOfThisComputer(String addressToCheck){
+	public boolean isThatAMacAddressOnOfThisComputer(String macLan, String macWlan){
 		try {
 			Vector<String> macs = new Vector<String>();
 			
@@ -93,7 +93,13 @@ public class NetworkMonitor {
 			}
 			
 			if(!macs.isEmpty()){
-				return macs.contains(addressToCheck);
+				if (macLan != null && !macLan.isEmpty() && macs.contains(macLan)) {
+					return true;
+				}else if(macWlan != null && !macWlan.isEmpty() && macs.contains(macWlan)){
+					return true;
+				}else{
+					return false;
+				}
 			}else{
 				return false;
 			}
@@ -144,9 +150,16 @@ public class NetworkMonitor {
 				System.out.println(host + ": " + mac);
 				for (Computer computer : config.getAll_computers()) {
 					if (mac.equals(computer.getMacLan())) {
-						computer.setIp(host);
-						computer.setReachable(true);
-						System.out.println("reachable");
+						computer.setIpLan(host);
+						computer.setReachableLan(true);
+						System.out.println("reachable via LAN");
+						gui.getComputerTable().updateUI();
+						return;
+					}
+					if (mac.equals(computer.getMacWlan())) {
+						computer.setIpWlan(host);
+						computer.setReachableWlan(true);
+						System.out.println("reachable vial WLAN");
 						gui.getComputerTable().updateUI();
 						return;
 					}
