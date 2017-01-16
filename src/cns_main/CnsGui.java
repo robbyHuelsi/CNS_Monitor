@@ -190,7 +190,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public void actionPerformed(ActionEvent e)
 		    {
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
-		        System.out.println("Starting!! pressed row: "+modelRow);
+		        module_monitor.start_module(modelRow);
+		        //System.out.println("Starting!! pressed row: "+modelRow);
 		    }
 		};
 		Action show_module_output = new AbstractAction()

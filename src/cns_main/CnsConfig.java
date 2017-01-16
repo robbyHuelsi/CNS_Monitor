@@ -42,6 +42,9 @@ public class CnsConfig {
 	public Vector<Module> getAll_modules() {
 		return all_modules;
 	}
+	public Module getModule(int module_num){
+		return all_modules.get(module_num);
+	}
 
 	public static CnsConfig getInstance() {
 		if (instance == null){

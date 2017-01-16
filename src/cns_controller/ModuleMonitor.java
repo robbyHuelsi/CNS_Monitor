@@ -16,10 +16,6 @@ public class ModuleMonitor {
 	
 	public boolean start_all_modules(){
 		for (Module module : config.getAll_modules()){
-			
-			
-			
-
 			if (!module.getStartCommand().isEmpty()){
 				ModuleStarter ms = new ModuleStarter(module);
 				ms.start();
@@ -28,7 +24,18 @@ public class ModuleMonitor {
 		}
 		return true;
 	}
-	
+
+	public boolean start_module(int module_num){
+		Module module = config.getModule( module_num);
+			if (!module.getStartCommand().isEmpty()){
+				ModuleStarter ms = new ModuleStarter(module);
+				ms.start();
+			}
+
+		
+		return true;
+	}
+
 	public ModuleMonitor(CnsConfig config){
 		this.config = config;
 	}
