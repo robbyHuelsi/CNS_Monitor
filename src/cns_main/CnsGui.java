@@ -97,10 +97,10 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public Object getValueAt(int row, int col) {
 				if (col == 0){
 					String name = config.getAll_computers().get(row).getName();
-					String info = "";
-					if (config.getAll_computers().get(row).isThisPC()) {
-						info = " (This computer)";
-					}
+//					String info = "";
+//					if (config.getAll_computers().get(row).isThisPC()) {
+//						info = " (This computer)";
+//					}
 					return (Object) name + info;
 				}else if (col == 1)
 					return (Object) config.getAll_computers().get(row).getMacInfoText();

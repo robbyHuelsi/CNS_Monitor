@@ -152,10 +152,16 @@ public class CnsConfig {
 		return null;
 	}
 	
-	public void resetAllIps(){
+	public void resetAllComputersIps(){
 		for (Computer computer : all_computers) {
 			computer.setIpLan("");
 			computer.setIpWlan("");
+		}
+	}
+	
+	public void setAllComputersReachabilityChecked(){
+		for (Computer computer : all_computers) {
+			computer.setReachabilityChecked(true);
 		}
 	}
 }
