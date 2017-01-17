@@ -41,15 +41,13 @@ public class ModuleStarter extends Thread{
 		System.out.println("starting module "+module.getName()+" with :\""+cmd+"\" ");
 		try {
 			p = Runtime.getRuntime().exec(cmd);
-			//p.waitFor();
 			// read output with BufferedReader
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String temp = null;
-			while( (temp = reader.readLine())!= null){
-				System.out.println(temp);
+			while( (temp = br.readLine())!= null){
+				module.addToOutput(temp+"\n");
 			}
-			System.out.println(reader.readLine());
+			//System.out.println(module.getReader().readLine());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

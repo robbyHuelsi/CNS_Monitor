@@ -201,7 +201,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public void actionPerformed(ActionEvent e)
 		    {
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
-		        System.out.println("Show output!! pressed row: "+modelRow);
+		        ModuleOutputGui moduleOutputGui = new ModuleOutputGui(config.getModule(modelRow)); 
 		    }
 		};
 		

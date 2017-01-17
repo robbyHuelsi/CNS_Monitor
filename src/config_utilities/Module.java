@@ -1,5 +1,10 @@
 package config_utilities;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
+import cns_main.ModuleOutputGui;
+
 public class Module {
 	
 	private String name;
@@ -7,7 +12,24 @@ public class Module {
 	private String path;
 	private String command;
 	private Computer computer;
+	private String output;
+	private ModuleOutputGui outputGui;
+
+	public String getOutput() {
+		return output;
+	}
 	
+	public void addToOutput(String newOutput){
+		//TODO secure access to output with mutex?
+		output+=newOutput;
+		if (outputGui != null)
+			outputGui.update();
+	}
+
+	public void setOutput(String output) {
+		this.output = output;
+	}
+
 	public String getStartCommand(){
 		return path+command;
 	}
@@ -50,5 +72,13 @@ public class Module {
 		this.command = command;
 	}
 	
+	public ModuleOutputGui getOutputGui() {
+		return outputGui;
+	}
+
+	public void setOutputGui(ModuleOutputGui outputGui) {
+		this.outputGui = outputGui;
+	}
+
 
 }
