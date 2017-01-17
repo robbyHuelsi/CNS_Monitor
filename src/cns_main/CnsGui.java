@@ -77,13 +77,16 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		
 		JButton check_network = new JButton ("Check Network");
 		JButton start_modules = new JButton ("Start Modules");
+		JButton kill_modules = new JButton ("Kill Modules");
 		
 		check_network.setEnabled(false);
 		start_modules.setEnabled(false);
+		kill_modules.setEnabled(false);
 
 		buttons.add(loadConfigCombo);
 		buttons.add(check_network);
 		buttons.add(start_modules);
+		buttons.add(kill_modules);
 
 		// Build computers table
 		class MyComputerTableModel extends AbstractTableModel {
@@ -136,7 +139,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		//Build Module Table
 		class MyModuleTableModel extends AbstractTableModel {
 			private static final long serialVersionUID = 1L;
-			String[] columnNames = { "Name", "Computer", "Port", "", "" };
+			String[] columnNames = { "Name", "Computer", "Port", "", "", "" };
 
 			public int getColumnCount() {
 				return columnNames.length;
@@ -152,7 +155,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 
 			public boolean isCellEditable(int row, int col)
 		      {
-				if ( col==3 || col==4)
+				if ( col==3 || col==4 || col==5)
 					return true;
 				else
 					return false;
@@ -168,8 +171,10 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					return (Object) config.getAll_modules().get(row).getListeningPort();
 				else if (col == 3)
 					return (Object) "Start";
-				else
+				else if (col == 4)
 					return (Object) "Show output";
+				else
+					return (Object) "Kill";
 			}
 						
 		}
@@ -204,12 +209,26 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		        ModuleOutputGui moduleOutputGui = new ModuleOutputGui(config.getModule(modelRow)); 
 		    }
 		};
+		Action kill_module = new AbstractAction()
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e)
+		    {
+		        int modelRow = Integer.valueOf( e.getActionCommand() );
+		        module_monitor.kill_module(modelRow);
+		        //System.out.println("Starting!! pressed row: "+modelRow);
+		    }
+		};
+
 		
 		//see: tips4java.wordpress.com/2009/07/12/table-button-column/
 		ButtonColumn bc3 = new ButtonColumn (module_table, start_module, 3 );
 		ButtonColumn bc4 = new ButtonColumn (module_table, show_module_output, 4 );
+		ButtonColumn bc5 = new ButtonColumn (module_table, kill_module, 5 );
 		bc3.setMnemonic(KeyEvent.VK_D);
 		bc4.setMnemonic(KeyEvent.VK_D);
+		bc5.setMnemonic(KeyEvent.VK_D);
 		
 		module_table.setPreferredScrollableViewportSize(new Dimension(500, 250));
 
@@ -235,6 +254,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 							module_table.updateUI();
 							check_network.setEnabled(true);
 							start_modules.setEnabled(true);
+							kill_modules.setEnabled(true);
 							setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
 							loadConfigCombo.updateUI();
 						}
@@ -247,6 +267,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 						module_table.updateUI();
 						check_network.setEnabled(true);
 						start_modules.setEnabled(true);
+						kill_modules.setEnabled(true);
 						setting.addRecentOpenConfig(e.getItem().toString());
 						loadConfigCombo.updateUI();
 					}
@@ -265,6 +286,12 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		start_modules.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				module_monitor.start_all_modules();
+			}
+		});
+		
+		kill_modules.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				module_monitor.kill_all_modules();
 			}
 		});
 

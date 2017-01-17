@@ -39,13 +39,13 @@ public class ModuleOutputGui extends JFrame{
 			total.setLocation(1000, 0);
 			total.setVisible(true);
 			
-			output.setText(module.getOutput());
+			output.setText(module.getStartCommand()+"\n");
 			module.setOutputGui(this);
 			
 	}
 	
 	public void update(){
-		output.setText(module.getOutput());
+		output.setText(module.getStartCommand()+"\n\n"+module.getOutput());
 		scrollPane.getVerticalScrollBar().setValue( scrollPane.getVerticalScrollBar().getMaximum());
 	}
 

@@ -29,6 +29,10 @@ public class Module {
 	public void setOutput(String output) {
 		this.output = output;
 	}
+	
+	public void resetOutput(){
+		output="";
+	}
 
 	public String getStartCommand(){
 		return path+command;
@@ -40,6 +44,7 @@ public class Module {
 		this.computer = computer;
 		path="";
 		command="";
+		output="";
 	}
 
 	public String getName() {
