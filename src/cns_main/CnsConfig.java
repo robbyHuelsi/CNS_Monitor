@@ -39,9 +39,11 @@ public class CnsConfig {
 	public Vector<Computer> getAll_computers() {
 		return all_computers;
 	}
+	
 	public Vector<Module> getAll_modules() {
 		return all_modules;
 	}
+	
 	public Module getModule(int module_num){
 		return all_modules.get(module_num);
 	}
@@ -72,6 +74,7 @@ public class CnsConfig {
 			JSONObject jsonObject = (JSONObject) obj;
 
 			all_computers.removeAllElements();
+			all_modules.removeAllElements();
 			
 			// read Computers
 			JSONArray computers = (JSONArray) jsonObject.get("Computers");
@@ -110,7 +113,7 @@ public class CnsConfig {
 				}
 				all_modules.addElement(new Module(name, port, computer));
 				if (!command.isEmpty())
-					all_modules.lastElement().setCommand(command);
+					all_modules.lastElement().setCommand(parseCommand(command, this));
 				//System.out.println(all_modules.lastElement());
 			}
 
@@ -165,5 +168,71 @@ public class CnsConfig {
 		for (Computer computer : all_computers) {
 			computer.setReachabilityChecked(true);
 		}
+	}
+	
+	private String parseCommand(String command, Object parent){
+		try {
+			while (command.contains("#(")) {
+				System.out.println(command);
+				String ref = command.substring(command.indexOf("#("));
+				ref = ref.substring(0, ref.indexOf(")") + 1);
+				String source = parseRecursive(ref.substring(2, ref.length()-1), parent);
+				do {
+					command = command.replace(ref, source);
+				} while (command.contains(ref));
+			}
+			System.out.println("Commando parsing done: " + command);
+		} catch (Exception e) {
+			System.out.println("Commando parsing failed: " + command);
+		}
+		return command;
+	}
+	
+	private String parseRecursive(String ref, Object parent){
+		String[] refSubstrs = ref.split("\\.");
+		String list = "";
+		Object obj = null;
+		
+		// Wenn erstes Element der Referenz ein Verweis auf ein Listenelement ist, setzte list gleich Name des Eintrages
+		if (refSubstrs[0].contains("[") && refSubstrs[0].contains("]")) {
+			list = refSubstrs[0].substring(refSubstrs[0].indexOf("[") + 1, refSubstrs[0].indexOf("]"));
+			refSubstrs[0] = refSubstrs[0].substring(0, refSubstrs[0].indexOf("["));
+		}
+		
+		// Objekt finden
+		if (parent.getClass().equals(this.getClass())) {
+			if (refSubstrs[0].equals("Computers")) {
+				obj = all_computers;
+			} else if(refSubstrs[0].equals("Modules")) {
+				obj = all_modules;
+			}
+		}
+		
+		// Wenn Liste, dann gebe gesuchtes objekt der Liste zurück
+		if (!list.isEmpty() && obj instanceof Vector) {
+			Vector v = (Vector) obj;
+			try {
+				//if numbers
+				obj = v.get(Integer.parseInt(list));
+			} catch (Exception e) {
+				//if not a number
+				//try to find string in list
+				for (Object o : v) {
+					if ((o instanceof Computer && ((Computer) o).getName().equals(list))
+					 || (o instanceof Module && ((Module) o).getName().equals(list))) {
+						obj = o;
+						break;
+					}
+				}
+			}
+		}
+		
+		if (refSubstrs.length == 1) {
+			return obj.toString();
+		} else {
+			parseRecursive(ref.substring(ref.indexOf('.') + 1), obj);
+		}
+		
+		return "";
 	}
 }
