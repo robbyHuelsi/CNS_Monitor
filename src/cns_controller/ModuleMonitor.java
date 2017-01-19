@@ -29,6 +29,7 @@ public class ModuleMonitor {
 	}
 
 	public boolean start_module(int module_num){
+		moduleStarters.setSize(config.getAll_modules().size());
 		Module module = config.getModule( module_num);
 			if (!module.getStartCommand().isEmpty()){
 				moduleStarters.add(module_num, new ModuleStarter(module));
@@ -38,7 +39,7 @@ public class ModuleMonitor {
 	}
 	
 	public boolean kill_module(int module_num){
-		if (moduleStarters.elementAt(module_num) != null){
+		if (moduleStarters.size()>module_num && moduleStarters.elementAt(module_num) != null){
 			moduleStarters.elementAt(module_num).killModule();
 		}
 		return true;
