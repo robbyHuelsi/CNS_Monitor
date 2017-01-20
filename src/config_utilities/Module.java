@@ -8,6 +8,7 @@ import cns_main.ModuleOutputGui;
 
 public class Module {
 	
+	private CnsConfig cnsConfig;
 	private String name;
 	private int listening_port;
 	private String path;
@@ -15,7 +16,6 @@ public class Module {
 	private Computer computer;
 	private String output;
 	private ModuleOutputGui outputGui;
-	private CnsConfig cnsConfig;
 
 	public Module (CnsConfig cnsConfig, String name, int listening_port, Computer computer){
 		this.cnsConfig = cnsConfig;

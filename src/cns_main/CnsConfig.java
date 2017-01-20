@@ -190,12 +190,12 @@ public class CnsConfig {
 	private String parseRecursive(String ref, Object parent){
 		String[] refSubstrs = ref.split("\\.");
 		Object obj = null;
-		
+			 
 		// Objekt finden
 		if (parent.getClass().equals(this.getClass())) {
-			if (refSubstrs[0].equals("C")) {
+			if (refSubstrs[0].toLowerCase().equals("c")) {
 				obj = all_computers;
-			} else if(refSubstrs[0].equals("M")) {
+			} else if(refSubstrs[0].toLowerCase().equals("m")) {
 				obj = all_modules;
 			}
 		}else if(parent instanceof Vector){
@@ -208,8 +208,8 @@ public class CnsConfig {
 				//if not a number
 				//try to find string in list
 				for (Object o : v) {
-					if ((o instanceof Computer && ((Computer) o).getName().equals(refSubstrs[0]))
-					 || (o instanceof Module && ((Module) o).getName().equals(refSubstrs[0]))) {
+					if ((o instanceof Computer && ((Computer) o).getName().toLowerCase().equals(refSubstrs[0].toLowerCase()))
+					 || (o instanceof Module && ((Module) o).getName().toLowerCase().equals(refSubstrs[0].toLowerCase()))) {
 						obj = o;
 						break;
 					}
@@ -222,13 +222,24 @@ public class CnsConfig {
 		}
 		
 		
-		
 		if (refSubstrs.length == 1) {
-			return obj.toString();
+			// Rücksprungbedingung
+			// Wenn der hinterste Teil der Referenz erreicht ist, gebe Wert zurück
+			// Davor Objekt in String umwandeln
+			if (obj == null) {
+				return "null";
+			}else if (obj instanceof String) {
+				return (String)obj;
+			}else if(obj instanceof Integer){
+				return Integer.toString((Integer)obj);
+			}else if(obj instanceof Boolean){
+				return ((Boolean)obj?"true":"false");
+			}else{
+				return obj.toString();
+			}
 		} else {
-			parseRecursive(ref.substring(ref.indexOf('.') + 1), obj);
+			//Gehe zum nächsten Part der Referenz und nehme obj mit.
+			return parseRecursive(ref.substring(ref.indexOf('.') + 1), obj);
 		}
-		
-		return "";
 	}
 }

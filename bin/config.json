@@ -32,7 +32,7 @@
 			"Name":"VBrain",
 			"Computer":"Nuc1",
 			"Port":"50010",
-			"Command":"ping #(M.VBrain.computer.ip) -i"
+			"Command":"ping #(M.VBrain.computer.mac) #(M.VBrain.port) -i"
 		},
 		{
 			"Name":"TrackingWaC",
@@ -44,13 +44,13 @@
 			"Name":"TrackingZoomC",
 			"Computer":"Main",
 			"Port":"50009",
-			"Command":"ping #(M.this.getIp) -k"
+			"Command":"ping #(C.Main.User) -k"
 		},
 		{
 			"Name":"EmotionDetection",
 			"Computer":"Nuc1",
 			"Port":"50013",
-			"Command":"ping #(test) -i"
+			"Command":"ping #(C.Nuc2.reachabilityChecked) -i"
 		},
 		{
 			"Name":"HBrain",

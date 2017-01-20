@@ -22,6 +22,8 @@ public class Computer {
 		this.macLan = macLan;
 		this.macWlan = macWlan;
 		this.user = user;
+		ipLan = "";
+		ipWlan = "";
 	}
 	
 	public String getName() {
@@ -148,7 +150,7 @@ public class Computer {
 			return getMac();
 		case "user":
 			return getUser();
-		case "reachabilityChecked":
+		case "reachabilitychecked":
 			return isReachabilityChecked();
 		default:
 			return null;
