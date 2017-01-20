@@ -61,27 +61,6 @@ public class Computer {
 		this.macWlan = macWlan;
 	}
 	
-	/*public String getMac(){
-		if (macLan != null && !macLan.isEmpty()) {
-			return macLan;
-		}else{
-			return macWlan;
-		}
-	}*/
-	
-	/*public boolean isReachableLan() {
-		return reachableLan;
-	}
-	public void setReachableLan(boolean reachable) {
-		this.reachableLan = reachable;
-	}
-	public boolean isReachableWlan() {
-		return reachableWlan;
-	}
-	public void setReachableWlan(boolean reachable) {
-		this.reachableWlan = reachable;
-	}*/
-	
 	public boolean isReachabilityChecked() {
 		return reachabilityChecked;
 	}
@@ -93,6 +72,22 @@ public class Computer {
 	}
 	public void setThisPC(boolean thisPC) {
 		this.thisPC = thisPC;
+	}
+	
+	public String getMac(){
+		if (!macLan.isEmpty()) {
+			return macLan;
+		}else{
+			return macWlan;
+		}
+	}
+	
+	public String getIp(){
+		if (!ipLan.isEmpty()) {
+			return ipLan;
+		}else{
+			return ipWlan;
+		}
 	}
 	
 	public String getIpInfoText(){
@@ -132,6 +127,31 @@ public class Computer {
 			return "WLAN";
 		}else{
 			return "false";
+		}
+	}
+	
+	public Object getParamByName(String name){
+		switch (name.toLowerCase()) {
+		case "name":
+			return getName();
+		case "iplan":
+			return getIpLan();
+		case "ipwlan":
+			return getIpWlan();
+		case "ip":
+			return getIp();
+		case "maclan":
+			return getMacLan();
+		case "macwlan":
+			return getMacWlan();
+		case "mac":
+			return getMac();
+		case "user":
+			return getUser();
+		case "reachabilityChecked":
+			return isReachabilityChecked();
+		default:
+			return null;
 		}
 	}
 

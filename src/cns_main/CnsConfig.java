@@ -13,7 +13,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 //import java.io.FileInputStream;
 
 
@@ -111,9 +110,9 @@ public class CnsConfig {
 					if (computer_temp.getName().equals(computer_string))
 						computer = computer_temp;
 				}
-				all_modules.addElement(new Module(name, port, computer));
+				all_modules.addElement(new Module(this, name, port, computer));
 				if (!command.isEmpty())
-					all_modules.lastElement().setCommand(parseCommand(command, this));
+					all_modules.lastElement().setCommand(command);
 				//System.out.println(all_modules.lastElement());
 			}
 
@@ -170,13 +169,13 @@ public class CnsConfig {
 		}
 	}
 	
-	private String parseCommand(String command, Object parent){
+	public String parseCommand(String command){
 		try {
 			while (command.contains("#(")) {
 				System.out.println(command);
 				String ref = command.substring(command.indexOf("#("));
 				ref = ref.substring(0, ref.indexOf(")") + 1);
-				String source = parseRecursive(ref.substring(2, ref.length()-1), parent);
+				String source = parseRecursive(ref.substring(2, ref.length()-1), this);
 				do {
 					command = command.replace(ref, source);
 				} while (command.contains(ref));
@@ -190,42 +189,39 @@ public class CnsConfig {
 	
 	private String parseRecursive(String ref, Object parent){
 		String[] refSubstrs = ref.split("\\.");
-		String list = "";
 		Object obj = null;
-		
-		// Wenn erstes Element der Referenz ein Verweis auf ein Listenelement ist, setzte list gleich Name des Eintrages
-		if (refSubstrs[0].contains("[") && refSubstrs[0].contains("]")) {
-			list = refSubstrs[0].substring(refSubstrs[0].indexOf("[") + 1, refSubstrs[0].indexOf("]"));
-			refSubstrs[0] = refSubstrs[0].substring(0, refSubstrs[0].indexOf("["));
-		}
 		
 		// Objekt finden
 		if (parent.getClass().equals(this.getClass())) {
-			if (refSubstrs[0].equals("Computers")) {
+			if (refSubstrs[0].equals("C")) {
 				obj = all_computers;
-			} else if(refSubstrs[0].equals("Modules")) {
+			} else if(refSubstrs[0].equals("M")) {
 				obj = all_modules;
 			}
-		}
-		
-		// Wenn Liste, dann gebe gesuchtes objekt der Liste zurück
-		if (!list.isEmpty() && obj instanceof Vector) {
-			Vector v = (Vector) obj;
+		}else if(parent instanceof Vector){
+			// Wenn Vector, dann gebe gesuchtes Objekt des Vectors zurück
+			Vector v = (Vector) parent;
 			try {
 				//if numbers
-				obj = v.get(Integer.parseInt(list));
+				obj = v.get(Integer.parseInt(refSubstrs[0]));
 			} catch (Exception e) {
 				//if not a number
 				//try to find string in list
 				for (Object o : v) {
-					if ((o instanceof Computer && ((Computer) o).getName().equals(list))
-					 || (o instanceof Module && ((Module) o).getName().equals(list))) {
+					if ((o instanceof Computer && ((Computer) o).getName().equals(refSubstrs[0]))
+					 || (o instanceof Module && ((Module) o).getName().equals(refSubstrs[0]))) {
 						obj = o;
 						break;
 					}
 				}
 			}
+		}else if(parent instanceof Computer){
+			obj = ((Computer) parent).getParamByName(refSubstrs[0]);
+		}else if(parent instanceof Module){
+			obj = ((Module) parent).getParamByName(refSubstrs[0]);
 		}
+		
+		
 		
 		if (refSubstrs.length == 1) {
 			return obj.toString();

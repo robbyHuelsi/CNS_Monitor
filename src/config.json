@@ -32,19 +32,19 @@
 			"Name":"VBrain",
 			"Computer":"Nuc1",
 			"Port":"50010",
-			"Command":"ping #(Modules[this].Ip) -i"
+			"Command":"ping #(M.VBrain.computer.ip) -i"
 		},
 		{
 			"Name":"TrackingWaC",
 			"Computer":"Main",
 			"Port":"50008",
-			"Command":"ping #(Modules[this].Ip) -j"
+			"Command":"ping #(M.TrackingWaC.computer.ip) -j"
 		},
 		{
 			"Name":"TrackingZoomC",
 			"Computer":"Main",
 			"Port":"50009",
-			"Command":"ping #(Modules[this].Ip) -k"
+			"Command":"ping #(M.this.getIp) -k"
 		},
 		{
 			"Name":"EmotionDetection",
