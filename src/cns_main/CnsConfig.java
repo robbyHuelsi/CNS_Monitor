@@ -13,7 +13,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 //import java.io.FileInputStream;
 
 
@@ -39,9 +38,11 @@ public class CnsConfig {
 	public Vector<Computer> getAll_computers() {
 		return all_computers;
 	}
+	
 	public Vector<Module> getAll_modules() {
 		return all_modules;
 	}
+	
 	public Module getModule(int module_num){
 		return all_modules.get(module_num);
 	}
@@ -72,6 +73,7 @@ public class CnsConfig {
 			JSONObject jsonObject = (JSONObject) obj;
 
 			all_computers.removeAllElements();
+			all_modules.removeAllElements();
 			
 			// read Computers
 			JSONArray computers = (JSONArray) jsonObject.get("Computers");
@@ -108,7 +110,7 @@ public class CnsConfig {
 					if (computer_temp.getName().equals(computer_string))
 						computer = computer_temp;
 				}
-				all_modules.addElement(new Module(name, port, computer));
+				all_modules.addElement(new Module(this, name, port, computer));
 				if (!command.isEmpty())
 					all_modules.lastElement().setCommand(command);
 				//System.out.println(all_modules.lastElement());
@@ -164,6 +166,80 @@ public class CnsConfig {
 	public void setAllComputersReachabilityChecked(){
 		for (Computer computer : all_computers) {
 			computer.setReachabilityChecked(true);
+		}
+	}
+	
+	public String parseCommand(String command){
+		try {
+			while (command.contains("#(")) {
+				System.out.println(command);
+				String ref = command.substring(command.indexOf("#("));
+				ref = ref.substring(0, ref.indexOf(")") + 1);
+				String source = parseRecursive(ref.substring(2, ref.length()-1), this);
+				do {
+					command = command.replace(ref, source);
+				} while (command.contains(ref));
+			}
+			System.out.println("Commando parsing done: " + command);
+		} catch (Exception e) {
+			System.out.println("Commando parsing failed: " + command);
+		}
+		return command;
+	}
+	
+	private String parseRecursive(String ref, Object parent){
+		String[] refSubstrs = ref.split("\\.");
+		Object obj = null;
+			 
+		// Objekt finden
+		if (parent.getClass().equals(this.getClass())) {
+			if (refSubstrs[0].toLowerCase().equals("c")) {
+				obj = all_computers;
+			} else if(refSubstrs[0].toLowerCase().equals("m")) {
+				obj = all_modules;
+			}
+		}else if(parent instanceof Vector){
+			// Wenn Vector, dann gebe gesuchtes Objekt des Vectors zurück
+			Vector v = (Vector) parent;
+			try {
+				//if numbers
+				obj = v.get(Integer.parseInt(refSubstrs[0]));
+			} catch (Exception e) {
+				//if not a number
+				//try to find string in list
+				for (Object o : v) {
+					if ((o instanceof Computer && ((Computer) o).getName().toLowerCase().equals(refSubstrs[0].toLowerCase()))
+					 || (o instanceof Module && ((Module) o).getName().toLowerCase().equals(refSubstrs[0].toLowerCase()))) {
+						obj = o;
+						break;
+					}
+				}
+			}
+		}else if(parent instanceof Computer){
+			obj = ((Computer) parent).getParamByName(refSubstrs[0]);
+		}else if(parent instanceof Module){
+			obj = ((Module) parent).getParamByName(refSubstrs[0]);
+		}
+		
+		
+		if (refSubstrs.length == 1) {
+			// Rücksprungbedingung
+			// Wenn der hinterste Teil der Referenz erreicht ist, gebe Wert zurück
+			// Davor Objekt in String umwandeln
+			if (obj == null) {
+				return "null";
+			}else if (obj instanceof String) {
+				return (String)obj;
+			}else if(obj instanceof Integer){
+				return Integer.toString((Integer)obj);
+			}else if(obj instanceof Boolean){
+				return ((Boolean)obj?"true":"false");
+			}else{
+				return obj.toString();
+			}
+		} else {
+			//Gehe zum nächsten Part der Referenz und nehme obj mit.
+			return parseRecursive(ref.substring(ref.indexOf('.') + 1), obj);
 		}
 	}
 }
