@@ -3,7 +3,7 @@
 	[
 		{
 			"Name":"Main",
-			"MacLan":"00:03:2D:31:29:E5",
+			"MacLan":"00:03:2D:31:29:E4",
 			"MacWlan":"",
 			"User":"leonie"
 		},
@@ -38,7 +38,7 @@
 			"Name":"TrackingWaC",
 			"Computer":"Main",
 			"Port":"50008",
-			"Command":"D:\Desktop\putty\PUTTY.EXE leonie@192.168.188.10"
+			"Command":"ifconfig"
 		},
 		{
 			"Name":"TrackingZoomC",

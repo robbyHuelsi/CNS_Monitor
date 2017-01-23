@@ -1,6 +1,7 @@
 package cns_controller;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +16,7 @@ import config_utilities.Module;
 
 public class ModuleStarter extends Thread{
 	private Process p;
+	private Session session;
 	private Module module;
 	//private boolean running;
 	
@@ -51,16 +53,19 @@ public class ModuleStarter extends Thread{
 				//example from http://www.jcraft.com/jsch/examples/Exec.java.html
 				JSch jsch=new JSch();  
 
-				Session session=jsch.getSession(module.getComputer().getUser(), module.getComputer().getIpLan(), 22);
+				session=jsch.getSession(module.getComputer().getUser(), module.getComputer().getIpLan(), 22);
+				
+				//TODO this is not safe!! should not do this
+				JSch.setConfig("StrictHostKeyChecking", "no");
+				
+				//UnknownHostKey: 192.168.188.101. RSA key fingerprint is 2c:3e:b0:0d:33:68:d7:c3:26:83:d2:21:21:46:4c:5f
+				//jsch.setKnownHosts("C:\\Users\\leonie\\known_hosts");
+				//String knownHostPublicKey = "192.168.188.101 ecdsa-sha2-nistp256 b7:de:f6:46:0b:a1:4f:90:4e:2f:ba:db:d1:a5:fb:4d";
+				//String knownHostPublicKey = "192.168.188.101 ssh-rsa 2c3eb00d3368d7c32683d22121464c5f";
+				//jsch.setKnownHosts(new ByteArrayInputStream(knownHostPublicKey.getBytes()));
 
-				// username and password will be given via UserInfo interface.
-				//UserInfo ui=new MyUserInfo();
-				//session.setUserInfo(ui);
-				session.setPassword("test");
+				session.setPassword(module.getComputer().getPassword());
 				session.connect();
-
-				//String command=JOptionPane.showInputDialog("Enter command", 
-				//		"set|grep SSH");
 
 				Channel channel=session.openChannel("exec");
 				((ChannelExec)channel).setCommand(cmd);
@@ -86,11 +91,11 @@ public class ModuleStarter extends Thread{
 					while(in.available()>0){
 						int i=in.read(tmp, 0, 1024);
 						if(i<0)break;
-						System.out.print(new String(tmp, 0, i));
+						module.addToOutput(new String(tmp, 0, i));
 					}
 					if(channel.isClosed()){
 						if(in.available()>0) continue; 
-						System.out.println("exit-status: "+channel.getExitStatus());
+						module.addToOutput("exit-status: "+channel.getExitStatus());
 						break;
 					}
 					try{Thread.sleep(1000);}catch(Exception ee){}
@@ -109,6 +114,8 @@ public class ModuleStarter extends Thread{
 	{
 		if (p!=null)
 			p.destroy();
+		if (session!=null)
+			session.disconnect();
 		
 	}
 	

@@ -6,6 +6,8 @@ public class Computer {
 	private String ipLan, ipWlan;
 	private String user;
 	private String macLan,macWlan;
+	private String password;
+
 
 	//private boolean reachableLan, reachableWlan;
 	private boolean reachabilityChecked;
@@ -61,6 +63,12 @@ public class Computer {
 	}
 	public void setMacWlan(String macWlan) {
 		this.macWlan = macWlan;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	public boolean isReachabilityChecked() {
