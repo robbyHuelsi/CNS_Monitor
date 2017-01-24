@@ -58,6 +58,10 @@ public class CnsConfig {
 	public void setGui(CnsGui gui){
 		this.gui = gui;
 	}
+	
+	public File getFile(){
+		return file;
+	}
 
 	public boolean load(String path){
 		File file = new File(path);
@@ -116,6 +120,8 @@ public class CnsConfig {
 				//System.out.println(all_modules.lastElement());
 			}
 
+			
+			gui.setTotalTitle(file.getName());
 			return true;
 		}
 		catch (IOException e) {

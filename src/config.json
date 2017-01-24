@@ -32,7 +32,7 @@
 			"Name":"VBrain",
 			"Computer":"Nuc1",
 			"Port":"50010",
-			"Command":"ping #(M.VBrain.computer.mac) #(M.VBrain.port) -i"
+			"Command":"ifconfig"
 		},
 		{
 			"Name":"TrackingWaC",
@@ -68,7 +68,7 @@
 			"Name":"STT",
 			"Computer":"Nuc2",
 			"Port":"50022",
-			"Command":""
+			"Command":"cd"
 		},
 		{
 			"Name":"NoiseDetection",
@@ -87,6 +87,21 @@
 			"Computer":"Main",
 			"Port":"50050",
 			"Command":""
+		}
+	],
+	"Secenes":
+	[
+		{
+			"Name":"Brain",
+			"Computer":"Nuc2",
+			"Port":"50000",
+			"Command":""
+		},
+		{
+			"Name":"VBrain",
+			"Computer":"Nuc1",
+			"Port":"50010",
+			"Command":"ping #(M.VBrain.computer.mac) #(M.VBrain.port) -i"
 		}
 	]
 }

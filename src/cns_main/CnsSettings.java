@@ -6,11 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 import java.util.Vector;
+
+import config_utilities.Computer;
 
 public class CnsSettings {
 
 	private Vector<String> recentOpenConfig = new Vector<String>();
+	private HashMap<String, String> passwords = new HashMap<String, String>();
 	
 	public CnsSettings(){
 		if (load()) {
@@ -33,10 +37,27 @@ public class CnsSettings {
 			}
 		}
 		return save();
-		//return true;
 	}
 	
+	public boolean removeAllRecentOpenConfig(){
+		recentOpenConfig.removeAllElements();
+		return save();
+	}
 	
+	public String getPassword(String mac){
+		return passwords.get(mac);
+	}
+	
+	public void addPassword(Computer computer, String pass){
+		if (!computer.getIpLan().isEmpty() && !passwords.containsKey(computer.getMacLan())) {
+			passwords.put(computer.getMacLan(), pass);
+		}
+		
+		if (!computer.getIpWlan().isEmpty() && !passwords.containsKey(computer.getMacWlan())) {
+			passwords.put(computer.getMacWlan(), pass);
+		}
+		
+	}
 	
 	public boolean load(){
 		String path = getPath();

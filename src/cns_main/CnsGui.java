@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -14,6 +15,9 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
@@ -30,6 +34,9 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 import cns_controller.ModuleMonitor;
 import cns_controller.NetworkMonitor;
@@ -51,6 +58,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 	private NetworkMonitor network_monitor;
 	private CnsSettings setting;
 	
+	private JFrame total;
 	private JTable computer_table, module_table;
 
 	public CnsGui(CnsConfig config, ModuleMonitor module_monitor, NetworkMonitor network_monitor, CnsSettings setting){
@@ -61,32 +69,122 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		this.setting = setting;
 
 
-		JFrame total = new JFrame ("crazy CNS monitor");
+		total = new JFrame ("crazy CNS monitor");
 		BorderLayout bl = new BorderLayout();		
 		total.setLayout(bl);
-
-
-		// Build Jpanel buttons
-		JPanel buttons = new JPanel();
 		
-		// Load Config Combo Box
-		MyLoadFileComboBoxModel loadConfigComboModel = new MyLoadFileComboBoxModel();
-		JComboBox<String> loadConfigCombo = new JComboBox<String>(loadConfigComboModel);             
-		//loadConfigCombo.setPrototypeDisplayValue(loadConfigComboModel.getHeader().toString());
+		//Create the menu bar.
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menuFile = new JMenu("File");
+		JMenu menuNetwork = new JMenu("Network");
+		JMenu menuScene = new JMenu("Scene");
+		JMenu menuModule = new JMenu("Module");
 		
+		JMenuItem menuItemOpen = new JMenuItem("Open...");
+		JMenuItem menuItemReload = new JMenuItem("Reload");
+		JMenuItem menuItemExit = new JMenuItem("Exit");
+		JMenuItem menuItemCheckNetwork = new JMenuItem("Check Network");
+		JMenuItem menuItemStartModules = new JMenuItem("Start Modules");
+		JMenuItem menuItemKillModules = new JMenuItem("Kill Modules");
 		
-		JButton check_network = new JButton ("Check Network");
-		JButton start_modules = new JButton ("Start Modules");
-		JButton kill_modules = new JButton ("Kill Modules");
+		//Create RecentOpen Class
+		class JMenuRecentOpen extends JMenu {
+			
+			public JMenuRecentOpen(){
+				this.setText("Open Recent");
+				setItems();
+			}
+			
+			private void setItems(){
+				if (setting.getRecentOpenConfig().isEmpty()) {
+					this.setVisible(false);
+				}else{
+					this.setVisible(true);
+					this.removeAll();
+					
+					for (int i = 0; i < setting.getRecentOpenConfig().size(); i++) {
+						String path = setting.getRecentOpenConfig().get(i);
+						JMenuItem menuItemPath = new JMenuItem(path);
+						this.add(menuItemPath);
+						menuItemPath.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								menuItemPathActionPerformed(path);
+							}
+						});
+						if (i == 0) {
+							if (config.getFile() == null) {
+								menuItemPath.setAccelerator(KeyStroke.getKeyStroke("alt O"));
+							}else{
+								if (config.getFile().getPath().equals(path)) {
+									menuItemPath.setEnabled(false);
+								}else{
+									menuItemPath.setAccelerator(KeyStroke.getKeyStroke("alt O"));
+								}
+							}
+						}else if(i == 1){
+							if (config.getFile() != null) {
+								menuItemPath.setAccelerator(KeyStroke.getKeyStroke("alt O"));
+							}
+						}
+					}
+					
+					this.addSeparator();
+					
+					JMenuItem  menuItemRemove = new JMenuItem("Remove All");
+					this.add(menuItemRemove);
+					menuItemRemove.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							menuItemRemoveActionPerformed();
+						}
+					});
+				}
+			}
+			
+			public void menuItemPathActionPerformed(String path) {
+				System.out.println(path);
+				if(config.load(path)){
+					computer_table.updateUI();
+					module_table.updateUI();
+					menuItemCheckNetwork.setEnabled(true);
+					menuItemStartModules.setEnabled(true);
+					menuItemKillModules.setEnabled(true);
+					setting.addRecentOpenConfig(path);
+					this.setItems();
+				}
+			}
+			
+			public void menuItemRemoveActionPerformed() {
+				setting.removeAllRecentOpenConfig();
+				this.setItems();
+			}
+			
+		}
+		JMenuRecentOpen menuOpenRecent = new JMenuRecentOpen();
 		
-		check_network.setEnabled(false);
-		start_modules.setEnabled(false);
-		kill_modules.setEnabled(false);
-
-		buttons.add(loadConfigCombo);
-		buttons.add(check_network);
-		buttons.add(start_modules);
-		buttons.add(kill_modules);
+		//Set up the menu bar
+		menuBar.add(menuFile);
+		
+		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuFile.add(menuItemOpen);
+		menuFile.add(menuOpenRecent);
+		menuItemReload.setAccelerator(KeyStroke.getKeyStroke('R', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuFile.add(menuItemReload);
+		menuFile.addSeparator();
+		menuItemExit.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuFile.add(menuItemExit);
+		
+		menuBar.add(menuNetwork);
+		menuItemCheckNetwork.setEnabled(false);
+		menuNetwork.add(menuItemCheckNetwork);
+		
+		menuBar.add(menuScene);
+		
+		menuBar.add(menuModule);
+		menuItemStartModules.setEnabled(false);
+		menuModule.add(menuItemStartModules);
+		menuItemKillModules.setEnabled(false);
+		menuModule.add(menuItemKillModules);
+		
 
 		// Build computers table
 		class MyComputerTableModel extends AbstractTableModel {
@@ -125,6 +223,11 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		}
 		
 		computer_table = new JTable(new MyComputerTableModel()){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component component = super.prepareRenderer(renderer, row, column);
 				int rendererWidth = component.getPreferredSize().width;
@@ -179,6 +282,11 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 						
 		}
 		module_table = new JTable(new MyModuleTableModel()){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component component = super.prepareRenderer(renderer, row, column);
 				int rendererWidth = component.getPreferredSize().width;
@@ -237,14 +345,12 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		tables.add(new JScrollPane(module_table));
 
 
-		total.add(buttons, BorderLayout.NORTH);
+		total.add(menuBar, BorderLayout.NORTH);
 		total.add(tables, BorderLayout.CENTER);
 		total.setSize(1000,500);
 		total.setVisible(true);
 		
-		
-		loadConfigCombo.addItemListener( new ItemListener() {
-			public void itemStateChanged( ItemEvent e ) {
+			/*public void itemStateChanged( ItemEvent e ) {
 				if (e.getStateChange() == ItemEvent.SELECTED && e.getItem().equals(loadConfigComboModel.getBrowse())){
 					JFileChooser fC = new JFileChooser();
 					fC.showOpenDialog(total);
@@ -273,23 +379,58 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					}
 					loadConfigCombo.setSelectedItem(loadConfigComboModel.getHeader());
 				}	
+			}*/
+
+		menuItemOpen.addActionListener ( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fC = new JFileChooser();
+				fC.showOpenDialog(total);
+				if (true) { //TODO: check cancel button
+					if(config.load(fC.getSelectedFile())){
+						computer_table.updateUI();
+						module_table.updateUI();
+						menuItemCheckNetwork.setEnabled(true);
+						menuItemStartModules.setEnabled(true);
+						menuItemKillModules.setEnabled(true);
+						setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
+						menuOpenRecent.setItems();
+					}
+				}
 			}
 		});
-
-		check_network.addActionListener ( new ActionListener() {
+		
+		menuItemReload.addActionListener ( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(config.load(config.getFile())){
+					computer_table.updateUI();
+					module_table.updateUI();
+					menuItemCheckNetwork.setEnabled(true);
+					menuItemStartModules.setEnabled(true);
+					menuItemKillModules.setEnabled(true);
+				}
+			}
+		});
+		
+		menuItemExit.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent ev) {
+		            System.exit(0);
+		    }
+		});
+		
+		menuItemCheckNetwork.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				network_monitor.startCompleteNetworkCheck();
 				computer_table.updateUI();
 			}
 		});
 		
-		start_modules.addActionListener ( new ActionListener() {
+		menuItemStartModules.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				module_monitor.start_all_modules();
 			}
 		});
 		
-		kill_modules.addActionListener( new ActionListener() {
+		menuItemKillModules.addActionListener( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				module_monitor.kill_all_modules();
 			}
@@ -306,54 +447,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		return network_monitor;
 	}
 
-	class MyLoadFileComboBoxModel extends AbstractListModel implements ComboBoxModel {
-    	String loadConfigComboHeader = "Load Config";
-    	String loadConfigComboBrowse = "Open Other Config...";
-
-    	String selection = loadConfigComboHeader;
-    	
-		@Override
-		public int getSize() {
-			if (setting != null) {
-    			return setting.getRecentOpenConfig().size() + 2;
-			}else{
-				return 2;
-			}
-		}
-
-		@Override
-		public Object getElementAt(int index) {
-			if (index == 0) {
-				return loadConfigComboHeader;
-    		}else if (index == getSize() - 1){
-    			return loadConfigComboBrowse;
-			} else {
-				if (setting != null) {
-					return setting.getRecentOpenConfig().get(index-1);
-				}else{
-					return "";
-				}
-			}
-		}
-
-		@Override
-		public void setSelectedItem(Object anItem) {
-			selection = (String) anItem;
-		}
-
-		@Override
-		public Object getSelectedItem() {
-			return selection;
-		}
-		
-		public Object getHeader(){
-			return loadConfigComboHeader;
-		}
-    	
-		public Object getBrowse(){
-			return loadConfigComboBrowse;
-		}
-		
-    }
-
+	public void setTotalTitle(String title){
+		total.setTitle(title);
+	}
 }

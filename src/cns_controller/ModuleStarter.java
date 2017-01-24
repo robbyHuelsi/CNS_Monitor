@@ -64,7 +64,8 @@ public class ModuleStarter extends Thread{
 				//String knownHostPublicKey = "192.168.188.101 ssh-rsa 2c3eb00d3368d7c32683d22121464c5f";
 				//jsch.setKnownHosts(new ByteArrayInputStream(knownHostPublicKey.getBytes()));
 
-				session.setPassword(module.getComputer().getPassword());
+				//session.setPassword(module.getComputer().getPassword());
+				session.setPassword("Scit0s");
 				session.connect();
 
 				Channel channel=session.openChannel("exec");
