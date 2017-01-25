@@ -16,13 +16,14 @@ public class ModuleOutputGui extends JFrame{
 	private Module module;
 	private JTextArea output;
 	private JScrollPane scrollPane;
+	private JFrame total;
 	
 	public ModuleOutputGui (Module module){
 		super("Output "+module.getName());
 		this.module = module;
 		
 		
-		JFrame total = new JFrame ("Output "+module.getName());
+		total = new JFrame ("Output "+module.getName());
 
 		//if (module.getReader()!= null){
 
@@ -50,5 +51,14 @@ public class ModuleOutputGui extends JFrame{
 		output.setText(module.getStartCommand()+"\n\n"+module.getOutput());
 		scrollPane.getVerticalScrollBar().setValue( scrollPane.getVerticalScrollBar().getMaximum());
 	}
+	
+	public void show(){
+		total.setVisible(true);
+	}
+	
+	public void hide(){
+		total.setVisible(false);
+	}
+	
 
 }

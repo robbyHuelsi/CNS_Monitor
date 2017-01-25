@@ -154,6 +154,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				if(config.load(path)){
 					computer_table.updateUI();
 					module_table.updateUI();
+					module_monitor.kill_all_modules();
+					module_monitor.reset();
 					menuItemCheckNetwork.setEnabled(true);
 					menuItemStartModules.setEnabled(true);
 					menuItemKillModules.setEnabled(true);
@@ -401,6 +403,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
 		        if (moduleGuis[modelRow]==null)
 		        	moduleGuis[modelRow] = new ModuleOutputGui(config.getModule(modelRow));
+		        else
+		        	moduleGuis[modelRow].show();
 		    }
 		};
 		Action kill_module = new AbstractAction()
@@ -443,6 +447,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				if (true) { //TODO: check cancel button
 					if(config.load(fC.getSelectedFile())){
 						module_monitor.kill_all_modules();
+						module_monitor.reset();
 						computer_table.updateUI();
 						module_table.updateUI();
 						menuItemCheckNetwork.setEnabled(true);
@@ -459,6 +464,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				if(config.load(config.getFile())){
 					module_monitor.kill_all_modules();
+					module_monitor.reset();
 					computer_table.updateUI();
 					module_table.updateUI();
 					menuItemCheckNetwork.setEnabled(true);
