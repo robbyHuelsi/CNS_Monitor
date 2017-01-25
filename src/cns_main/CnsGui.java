@@ -62,6 +62,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 	
 	private JFrame total;
 	private JTable computer_table, module_table;
+	
+	private ModuleOutputGui[] moduleGuis;
 
 	public CnsGui(CnsConfig config, ModuleMonitor module_monitor, NetworkMonitor network_monitor, CnsSettings setting){
 		super("CNS_Monitor");
@@ -69,6 +71,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		this.module_monitor = module_monitor;
 		this.network_monitor = network_monitor;
 		this.setting = setting;
+		
+		this.moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 
 
 		total = new JFrame ("crazy CNS monitor");
@@ -155,6 +159,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					menuItemKillModules.setEnabled(true);
 					setting.addRecentOpenConfig(path);
 					this.setItems();
+					moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 				}
 			}
 			
@@ -394,7 +399,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public void actionPerformed(ActionEvent e)
 		    {
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
-		        ModuleOutputGui moduleOutputGui = new ModuleOutputGui(config.getModule(modelRow)); 
+		        if (moduleGuis[modelRow]==null)
+		        	moduleGuis[modelRow] = new ModuleOutputGui(config.getModule(modelRow));
 		    }
 		};
 		Action kill_module = new AbstractAction()
@@ -443,6 +449,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 						menuItemStartModules.setEnabled(true);
 						menuItemKillModules.setEnabled(true);
 						setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
+						moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 					}
 				}
 			}
@@ -457,6 +464,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					menuItemCheckNetwork.setEnabled(true);
 					menuItemStartModules.setEnabled(true);
 					menuItemKillModules.setEnabled(true);
+					moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 				}
 			}
 		});
