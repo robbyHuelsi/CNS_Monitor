@@ -16,6 +16,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.WindowConstants;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.event.PopupMenuEvent;
@@ -40,6 +41,7 @@ import javax.swing.JMenuItem;
 
 import cns_controller.ModuleMonitor;
 import cns_controller.NetworkMonitor;
+import config_utilities.Computer;
 
 
 public class CnsGui<MyLoadFileComboBox> extends JFrame{
@@ -70,6 +72,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 
 
 		total = new JFrame ("crazy CNS monitor");
+		total.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
 		BorderLayout bl = new BorderLayout();		
 		total.setLayout(bl);
 		
@@ -79,6 +83,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		JMenu menuNetwork = new JMenu("Network");
 		JMenu menuScene = new JMenu("Scene");
 		JMenu menuModule = new JMenu("Module");
+		JMenu menuComputer = new JMenu("Computer");
 		
 		JMenuItem menuItemOpen = new JMenuItem("Open...");
 		JMenuItem menuItemReload = new JMenuItem("Reload");
@@ -159,7 +164,79 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			}
 			
 		}
+		
+		//Create Passwords Class
+		class JMenuPasswords extends JMenu {
+			
+			public JMenuPasswords(){
+				this.setText("Passwords");
+				setItems();
+			}
+			
+			private void setItems(){
+				if (setting.getPasswords().isEmpty()) {
+					this.removeAll();
+					JMenuItem menuItemPass = new JMenuItem("No Passwords");
+					menuItemPass.setEnabled(false);
+					this.add(menuItemPass);
+				}else{
+					this.removeAll();
+					
+					for (int i = 0; i < setting.getPasswords().size(); i++) {
+						CnsPassword pass = setting.getPasswords().get(i);
+						String text = null;
+						
+						for (Computer computer : config.getAll_computers()) {
+							if (pass.getMac().equals(computer.getMacLan())) {
+								text = "Remove Password for " + computer.getName() + " via LAN";
+								break;
+							}else if(pass.getMac().equals(computer.getMacWlan())){
+								text = "Remove Password for " + computer.getName() + " via WLAN";
+								break;
+							}
+						}
+						
+						if (text == null) {
+							text = "Remove Password for " + pass.getMac();
+						}
+						
+						JMenuItem menuItemPass = new JMenuItem(text);
+						this.add(menuItemPass);
+						menuItemPass.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								menuItemPasswordActionPerformed(pass);
+							}
+						});
+						
+					}
+					
+					this.addSeparator();
+					
+					JMenuItem menuItemRemovePasswords = new JMenuItem("Remove All Passwords");
+					this.add(menuItemRemovePasswords);
+					menuItemRemovePasswords.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							menuItemRemoveActionPerformed();
+						}
+					});
+				}
+			}
+			
+			public void menuItemPasswordActionPerformed(CnsPassword password) {
+				setting.getPasswords().remove(password);
+				setting.save();
+				this.setItems();
+			}
+			
+			public void menuItemRemoveActionPerformed() {
+				setting.removeAllPasswords();
+				this.setItems();
+			}
+			
+		}
+		
 		JMenuRecentOpen menuOpenRecent = new JMenuRecentOpen();
+		JMenuPasswords menuPasswords = new JMenuPasswords();
 		
 		//Set up the menu bar
 		menuBar.add(menuFile);
@@ -184,6 +261,9 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		menuModule.add(menuItemStartModules);
 		menuItemKillModules.setEnabled(false);
 		menuModule.add(menuItemKillModules);
+		
+		menuBar.add(menuComputer);
+		menuComputer.add(menuPasswords);
 		
 
 		// Build computers table
@@ -349,37 +429,6 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		total.add(tables, BorderLayout.CENTER);
 		total.setSize(1000,500);
 		total.setVisible(true);
-		
-			/*public void itemStateChanged( ItemEvent e ) {
-				if (e.getStateChange() == ItemEvent.SELECTED && e.getItem().equals(loadConfigComboModel.getBrowse())){
-					JFileChooser fC = new JFileChooser();
-					fC.showOpenDialog(total);
-					if (true) { //TODO: check cancel button
-						if(config.load(fC.getSelectedFile())){
-							computer_table.updateUI();
-							module_table.updateUI();
-							check_network.setEnabled(true);
-							start_modules.setEnabled(true);
-							kill_modules.setEnabled(true);
-							setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
-							loadConfigCombo.updateUI();
-						}
-					}
-					loadConfigCombo.setSelectedItem(loadConfigComboModel.getHeader());
-				}else if(e.getStateChange() == ItemEvent.SELECTED && !e.getItem().equals(loadConfigComboModel.getHeader())){
-					//System.out.println("path selected");
-					if(config.load(e.getItem().toString())){
-						computer_table.updateUI();
-						module_table.updateUI();
-						check_network.setEnabled(true);
-						start_modules.setEnabled(true);
-						kill_modules.setEnabled(true);
-						setting.addRecentOpenConfig(e.getItem().toString());
-						loadConfigCombo.updateUI();
-					}
-					loadConfigCombo.setSelectedItem(loadConfigComboModel.getHeader());
-				}	
-			}*/
 
 		menuItemOpen.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -387,13 +436,13 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				fC.showOpenDialog(total);
 				if (true) { //TODO: check cancel button
 					if(config.load(fC.getSelectedFile())){
+						module_monitor.kill_all_modules();
 						computer_table.updateUI();
 						module_table.updateUI();
 						menuItemCheckNetwork.setEnabled(true);
 						menuItemStartModules.setEnabled(true);
 						menuItemKillModules.setEnabled(true);
 						setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
-						menuOpenRecent.setItems();
 					}
 				}
 			}
@@ -402,6 +451,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		menuItemReload.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(config.load(config.getFile())){
+					module_monitor.kill_all_modules();
 					computer_table.updateUI();
 					module_table.updateUI();
 					menuItemCheckNetwork.setEnabled(true);
@@ -435,8 +485,19 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				module_monitor.kill_all_modules();
 			}
 		});
-
-
+		
+		menuOpenRecent.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {menuOpenRecent.setItems();}
+			public void menuDeselected(MenuEvent e) {}
+			public void menuCanceled(MenuEvent e) {}
+		});
+		
+		menuPasswords.addMenuListener(new MenuListener() {
+			public void menuSelected(MenuEvent e) {menuPasswords.setItems();}
+			public void menuDeselected(MenuEvent e) {}
+			public void menuCanceled(MenuEvent e) {}
+		});
+		
 	}
 	
 	public JTable getComputerTable(){

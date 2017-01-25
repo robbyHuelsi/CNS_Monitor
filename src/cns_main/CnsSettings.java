@@ -14,7 +14,7 @@ import config_utilities.Computer;
 public class CnsSettings {
 
 	private Vector<String> recentOpenConfig = new Vector<String>();
-	private HashMap<String, String> passwords = new HashMap<String, String>();
+	private Vector<CnsPassword> passwords = new Vector<CnsPassword>();
 	
 	public CnsSettings(){
 		if (load()) {
@@ -44,19 +44,51 @@ public class CnsSettings {
 		return save();
 	}
 	
-	public String getPassword(String mac){
-		return passwords.get(mac);
+	public Vector<CnsPassword> getPasswords(){
+		return passwords;
 	}
 	
-	public void addPassword(Computer computer, String pass){
-		if (!computer.getIpLan().isEmpty() && !passwords.containsKey(computer.getMacLan())) {
-			passwords.put(computer.getMacLan(), pass);
+	public String getPassword(Computer computer){
+		for (CnsPassword password : passwords) {
+			if (password.getMac().equals(computer.getMac()) && password.getUser().equals(computer.getUser())) {
+				return password.getPassword();
+			}
+		}
+		return null;
+	}
+	
+	public boolean addPassword(Computer computer, String pass){
+		if (computer.getMacLan() != null && !computer.getMacLan().isEmpty()) {
+			boolean found = false;
+			for (CnsPassword password : passwords) {
+				if (password.getMac().equals(computer.getMacLan()) && password.getUser().equals(computer.getUser())) {
+					found = true;
+					password.setPassword(pass);
+				}
+			}
+			if (!found) {
+				passwords.add(new CnsPassword(computer.getMacLan(), computer.getUser(), pass));
+			}
 		}
 		
-		if (!computer.getIpWlan().isEmpty() && !passwords.containsKey(computer.getMacWlan())) {
-			passwords.put(computer.getMacWlan(), pass);
+		if (computer.getMacWlan() != null && !computer.getMacWlan().isEmpty()) {
+			boolean found = false;
+			for (CnsPassword password : passwords) {
+				if (password.getMac().equals(computer.getMacWlan()) && password.getUser().equals(computer.getUser())) {
+					found = true;
+					password.setPassword(pass);
+				}
+			}
+			if (!found) {
+				passwords.add(new CnsPassword(computer.getMacWlan(), computer.getUser(), pass));
+			}
 		}
-		
+		return save();
+	}
+	
+	public boolean removeAllPasswords(){
+		passwords.removeAllElements();
+		return save();
 	}
 	
 	public boolean load(){
@@ -76,9 +108,12 @@ public class CnsSettings {
 		      // lese ein objekt nach dem anderen aus dem inputstream. das letzte 
 		      // object, welches gelesen wird, ist null. dieses muss allerdings explizit
 		      // geschrieben worden sein; andernfalls wird eine EOFException geworfen.
-		      while ( (obj= objectinputstream.readObject()) != null ){
-		      	recentOpenConfig = ((Vector<String>) obj);
+		      if ( (obj= objectinputstream.readObject()) != null ){
+		    	  recentOpenConfig = ((Vector<String>) obj);
 		      }
+		      if ( (obj= objectinputstream.readObject()) != null ){
+		    	  passwords = ((Vector<CnsPassword>) obj);
+			  }
 		    System.out.println("Opening done");
 		    return true;
 		} catch (Exception e) {
@@ -104,7 +139,8 @@ public class CnsSettings {
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 		
 			oos.writeObject(recentOpenConfig);
-		
+			System.out.println(passwords);
+			oos.writeObject(passwords);
 			oos.writeObject( null );
 			oos.flush();
 			oos.close();

@@ -7,21 +7,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 //import java.lang.*;
 
+import javax.swing.JOptionPane;
+
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import cns_main.CnsGui;
+import cns_main.CnsSettings;
 import config_utilities.Module;
 
 public class ModuleStarter extends Thread{
 	private Process p;
 	private Session session;
 	private Module module;
+	private CnsSettings setting;
+	private CnsGui gui;
 	//private boolean running;
 	
-	public ModuleStarter (Module module){
+	public ModuleStarter (Module module, CnsSettings setting){
 		this.module = module;
+		this.setting = setting;
 		module.resetOutput();
 	}
 	
@@ -64,8 +71,18 @@ public class ModuleStarter extends Thread{
 				//String knownHostPublicKey = "192.168.188.101 ssh-rsa 2c3eb00d3368d7c32683d22121464c5f";
 				//jsch.setKnownHosts(new ByteArrayInputStream(knownHostPublicKey.getBytes()));
 
-				//session.setPassword(module.getComputer().getPassword());
-				session.setPassword("Scit0s");
+				String pass = setting.getPassword(module.getComputer());
+				if (pass == null) {
+					pass = JOptionPane.showInputDialog(null, "Please enter password for " + module.getComputer().getUser() + " on " + module.getComputer().getName() + ":", "Enter password", JOptionPane.QUESTION_MESSAGE);
+					if (pass == null) {
+						System.out.println("Cancel");
+						return;
+					}
+					setting.addPassword(module.getComputer(), pass);
+					
+				}
+				
+				session.setPassword(pass);
 				session.connect();
 
 				Channel channel=session.openChannel("exec");

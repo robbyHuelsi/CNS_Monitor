@@ -1,6 +1,7 @@
 package cns_main;
 
 import java.awt.Color;
+import java.awt.Insets;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -30,6 +31,7 @@ public class ModuleOutputGui extends JFrame{
 			output.setEditable(false);
 			output.setBackground(new Color(0));
 			output.setForeground(new Color(16777000));
+			output.setMargin(new Insets(5, 5, 5, 5));
 			//output.append("you need to select a prototype to be added to Commands list \n");
 			
 			scrollPane =new JScrollPane(output);

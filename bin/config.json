@@ -32,7 +32,7 @@
 			"Name":"VBrain",
 			"Computer":"Nuc1",
 			"Port":"50010",
-			"Command":"ifconfig"
+			"Command":"ping www.google.de"
 		},
 		{
 			"Name":"TrackingWaC",
