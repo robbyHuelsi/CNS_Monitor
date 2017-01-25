@@ -95,6 +95,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		JMenuItem menuItemCheckNetwork = new JMenuItem("Check Network");
 		JMenuItem menuItemStartModules = new JMenuItem("Start Modules");
 		JMenuItem menuItemKillModules = new JMenuItem("Kill Modules");
+		JMenuItem menuItemCloseModuleGuis = new JMenuItem("Close Module GUIs");
 		
 		//Create RecentOpen Class
 		class JMenuRecentOpen extends JMenu {
@@ -159,6 +160,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					menuItemCheckNetwork.setEnabled(true);
 					menuItemStartModules.setEnabled(true);
 					menuItemKillModules.setEnabled(true);
+					menuItemCloseModuleGuis.setEnabled(true);
 					setting.addRecentOpenConfig(path);
 					this.setItems();
 					moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
@@ -268,6 +270,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		menuModule.add(menuItemStartModules);
 		menuItemKillModules.setEnabled(false);
 		menuModule.add(menuItemKillModules);
+		menuItemCloseModuleGuis.setEnabled(false);
+		menuModule.add(menuItemCloseModuleGuis);
 		
 		menuBar.add(menuComputer);
 		menuComputer.add(menuPasswords);
@@ -453,6 +457,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 						menuItemCheckNetwork.setEnabled(true);
 						menuItemStartModules.setEnabled(true);
 						menuItemKillModules.setEnabled(true);
+						menuItemCloseModuleGuis.setEnabled(true);
 						setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
 						moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 					}
@@ -470,6 +475,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					menuItemCheckNetwork.setEnabled(true);
 					menuItemStartModules.setEnabled(true);
 					menuItemKillModules.setEnabled(true);
+					menuItemCloseModuleGuis.setEnabled(true);
 					moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 				}
 			}
@@ -500,6 +506,12 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			}
 		});
 		
+		menuItemCloseModuleGuis.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeAllModuleWindows();
+			}
+		});
+		
 		menuOpenRecent.addMenuListener(new MenuListener() {
 			public void menuSelected(MenuEvent e) {menuOpenRecent.setItems();}
 			public void menuDeselected(MenuEvent e) {}
@@ -520,6 +532,14 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 	
 	public NetworkMonitor getNetworkMonitor(){
 		return network_monitor;
+	}
+	
+	public void closeAllModuleWindows(){
+		for (int i=0; i<config.getAll_modules().size();++i){
+			if (moduleGuis[i] != null)
+				moduleGuis[i].hide();
+		}
+		
 	}
 
 	public void setTotalTitle(String title){

@@ -20,8 +20,10 @@ public class ModuleMonitor {
 	public boolean start_all_modules(){
 		for (int i=0; i<numberOfModules; ++i){
 			if (!config.getAll_modules().elementAt(i).getStartCommand().isEmpty()){
-				moduleStarters[i] = new ModuleStarter(config.getAll_modules().elementAt(i), setting);
-				moduleStarters[i].start();
+				if (moduleStarters[i] ==null){
+					moduleStarters[i] = new ModuleStarter(config.getAll_modules().elementAt(i), setting);
+					moduleStarters[i].start();
+				}
 			}
 		}
 		return true;
@@ -30,8 +32,10 @@ public class ModuleMonitor {
 	public boolean start_module(int module_num){
 		Module module = config.getModule( module_num);
 			if (!module.getStartCommand().isEmpty()){
-				moduleStarters[module_num] = new ModuleStarter(module, setting);
-				moduleStarters[module_num].start();
+				if (moduleStarters[module_num] == null){
+					moduleStarters[module_num] = new ModuleStarter(module, setting);
+					moduleStarters[module_num].start();
+				}
 			}
 		return true;
 	}
