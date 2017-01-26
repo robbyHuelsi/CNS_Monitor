@@ -38,19 +38,20 @@
 			"Name":"PTU",
 			"Computer":"Main",
 			"Port":"0",
-			"Command":"mira /opt/MIRA-commercial/domains/actors/FlirPTU/etc/PTU-D46-17-S.xml /home/leonie/MIRA-Projects/PTUTrackingCombined/domains/PTUTrackingCombined/etc/PTUTrackingCombined.xml"
+			"Command":"export LD_LIBRARY_PATH=/opt/MIRA/lib:/opt/MIRA-commercial/lib:/home/leonie/MIRA-Projects/DualCamPTUConverter/lib:/home/leonie/MIRA-Projects/DualCamPTUConverterFR/lib:/home/leonie/MIRA-Projects/Leonie/lib:/home/leonie/MIRA-Projects/Waypointvisitor/lib:/home/leonie/MIRA-Projects/PTUTrackingCombined/lib:/home/leonie/MIRA-Projects/RemoteControl/UDPMira/lib:/home/leonie/MIRA-Projects/DualCamPTUConverterModified/lib:/home/leonie/FRWithDualCamPTUConverter/lib:/home/leonie/MIRA-Projects/PTUTrackingSingle/lib:/home/leonie/MIRA-Projects/Archive/Leonie/lib; /opt/MIRA/bin/mira /opt/MIRA-commercial/domains/actors/FlirPTU/etc/PTU-D46-17-S.xml /home/leonie/MIRA-Projects/PTUTrackingCombined/domains/PTUTrackingCombined/etc/PTUTrackingCombined.xml"
 		},
 		{
 			"Name":"TrackingWaC",
 			"Computer":"Main",
 			"Port":"50008",
-			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_fisheye.cfg -e -u /home/leonie/ACI/ACI/libUtilities/share/calib_results_fish.txt -m ~/ACI/FR-tmp/ -s 1222"
+			"//":"source /home/leonie/.bashrc; /home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_fisheye.cfg -e -u /home/leonie/ACI/ACI/libUtilities/share/calib_results_fish.txt -m ~/ACI/FR-tmp/ -s 1222",
+            "Command":"source /home/leonie/.bashrc; echo $PATH"
 		},
 		{
 			"Name":"TrackingZoomC",
 			"Computer":"Main",
 			"Port":"50009",
-			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_zoom.cfg -e -m ~/ACI/FR-tmp/"
+			"Command":"source /home/leonie/.bashrc && /home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_zoom.cfg -e -m ~/ACI/FR-tmp/"
 		},
 		{
 			"Name":"EmotionDetection",

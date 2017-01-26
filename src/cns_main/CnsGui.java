@@ -62,6 +62,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 	
 	private JFrame total;
 	private JTable computer_table, module_table;
+	private JMenuItem menuItemOpen, menuItemReload, menuItemExit, menuItemCheckNetwork, menuItemStartModules, menuItemKillModules, menuItemCloseModuleGuis;
 	
 	private ModuleOutputGui[] moduleGuis;
 
@@ -89,13 +90,13 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		JMenu menuModule = new JMenu("Module");
 		JMenu menuComputer = new JMenu("Computer");
 		
-		JMenuItem menuItemOpen = new JMenuItem("Open...");
-		JMenuItem menuItemReload = new JMenuItem("Reload");
-		JMenuItem menuItemExit = new JMenuItem("Exit");
-		JMenuItem menuItemCheckNetwork = new JMenuItem("Check Network");
-		JMenuItem menuItemStartModules = new JMenuItem("Start Modules");
-		JMenuItem menuItemKillModules = new JMenuItem("Kill Modules");
-		JMenuItem menuItemCloseModuleGuis = new JMenuItem("Close Module GUIs");
+		menuItemOpen = new JMenuItem("Open...");
+		menuItemReload = new JMenuItem("Reload");
+		menuItemExit = new JMenuItem("Exit");
+		menuItemCheckNetwork = new JMenuItem("Check Network");
+		menuItemStartModules = new JMenuItem("Start Modules");
+		menuItemKillModules = new JMenuItem("Kill Modules");
+		menuItemCloseModuleGuis = new JMenuItem("Close Module GUIs");
 		
 		//Create RecentOpen Class
 		class JMenuRecentOpen extends JMenu {
@@ -153,17 +154,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public void menuItemPathActionPerformed(String path) {
 				System.out.println(path);
 				if(config.load(path)){
-					computer_table.updateUI();
-					module_table.updateUI();
-					module_monitor.kill_all_modules();
-					module_monitor.reset();
-					menuItemCheckNetwork.setEnabled(true);
-					menuItemStartModules.setEnabled(true);
-					menuItemKillModules.setEnabled(true);
-					menuItemCloseModuleGuis.setEnabled(true);
 					setting.addRecentOpenConfig(path);
-					this.setItems();
-					moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
+					updateViewForNewFile();
 				}
 			}
 			
@@ -450,16 +442,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				fC.showOpenDialog(total);
 				if (true) { //TODO: check cancel button
 					if(config.load(fC.getSelectedFile())){
-						module_monitor.kill_all_modules();
-						module_monitor.reset();
-						computer_table.updateUI();
-						module_table.updateUI();
-						menuItemCheckNetwork.setEnabled(true);
-						menuItemStartModules.setEnabled(true);
-						menuItemKillModules.setEnabled(true);
-						menuItemCloseModuleGuis.setEnabled(true);
 						setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
-						moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
+						updateViewForNewFile();
 					}
 				}
 			}
@@ -468,15 +452,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		menuItemReload.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(config.load(config.getFile())){
-					module_monitor.kill_all_modules();
-					module_monitor.reset();
-					computer_table.updateUI();
-					module_table.updateUI();
-					menuItemCheckNetwork.setEnabled(true);
-					menuItemStartModules.setEnabled(true);
-					menuItemKillModules.setEnabled(true);
-					menuItemCloseModuleGuis.setEnabled(true);
-					moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
+					closeAllModuleWindows();
+					updateViewForNewFile();
 				}
 			}
 		});
@@ -535,14 +512,28 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 	}
 	
 	public void closeAllModuleWindows(){
-		for (int i=0; i<config.getAll_modules().size();++i){
-			if (moduleGuis[i] != null)
-				moduleGuis[i].hide();
+		if (moduleGuis != null && moduleGuis.length > 0) {
+			for (int i=0; i<config.getAll_modules().size();++i){
+				if (moduleGuis[i] != null)
+					moduleGuis[i].hide();
+			}
 		}
-		
 	}
 
 	public void setTotalTitle(String title){
 		total.setTitle(title);
+	}
+	
+	private void updateViewForNewFile(){
+		closeAllModuleWindows();
+		module_monitor.kill_all_modules();
+		module_monitor.reset();
+		computer_table.updateUI();
+		module_table.updateUI();
+		menuItemCheckNetwork.setEnabled(true);
+		menuItemStartModules.setEnabled(true);
+		menuItemKillModules.setEnabled(true);
+		menuItemCloseModuleGuis.setEnabled(true);
+		moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 	}
 }
