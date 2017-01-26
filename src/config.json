@@ -3,7 +3,7 @@
 	[
 		{
 			"Name":"Main",
-			"MacLan":"00:03:2D:31:29:E5",
+			"MacLan":"00:03:2D:31:29:E4",
 			"MacWlan":"",
 			"User":"leonie"
 		},
@@ -32,19 +32,25 @@
 			"Name":"VBrain",
 			"Computer":"Nuc1",
 			"Port":"50010",
-			"Command":"ping www.google.de"
+			"Command":""
+		},
+		{
+			"Name":"PTU",
+			"Computer":"Main",
+			"Port":"0",
+			"Command":"mira /opt/MIRA-commercial/domains/actors/FlirPTU/etc/PTU-D46-17-S.xml /home/leonie/MIRA-Projects/PTUTrackingCombined/domains/PTUTrackingCombined/etc/PTUTrackingCombined.xml"
 		},
 		{
 			"Name":"TrackingWaC",
 			"Computer":"Main",
 			"Port":"50008",
-			"Command":"ping #(M.TrackingWaC.computer.ip) -j"
+			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_fisheye.cfg -e -u /home/leonie/ACI/ACI/libUtilities/share/calib_results_fish.txt -m ~/ACI/FR-tmp/ -s 1222"
 		},
 		{
 			"Name":"TrackingZoomC",
 			"Computer":"Main",
 			"Port":"50009",
-			"Command":"ping #(C.Main.User) -k"
+			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_zoom.cfg -e -m ~/ACI/FR-tmp/"
 		},
 		{
 			"Name":"EmotionDetection",
