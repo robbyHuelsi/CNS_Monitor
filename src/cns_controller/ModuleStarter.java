@@ -39,8 +39,8 @@ public class ModuleStarter extends Thread{
 		System.out.println("starting module "+module.getName()+" with :\""+cmd+"\" ");
 		module.startedRunning();
 		gui.getModuleTable().updateUI();
-		if (true){
-		//if (module.getComputer().isThisPC()){
+		//if (true){
+		if (module.getComputer().isThisPC()){
 			try {
 				p = Runtime.getRuntime().exec(cmd);
 				// read output with BufferedReader
