@@ -14,6 +14,7 @@ public class Start {
 		CnsGui cns_gui = new CnsGui(config, module_monitor, network_monitor, setting);
 		config.setGui(cns_gui);
 		network_monitor.setGui(cns_gui);
+		module_monitor.setGui(cns_gui);
 				
 
 	}

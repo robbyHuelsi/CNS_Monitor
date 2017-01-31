@@ -26,9 +26,10 @@ public class ModuleStarter extends Thread{
 	private CnsGui gui;
 	//private boolean running;
 	
-	public ModuleStarter (Module module, CnsSettings setting){
+	public ModuleStarter (Module module, CnsSettings setting, CnsGui gui){
 		this.module = module;
 		this.setting = setting;
+		this.gui = gui;
 		module.resetOutput();
 	}
 	
@@ -36,7 +37,10 @@ public class ModuleStarter extends Thread{
 	{
 		String cmd = module.getStartCommand();
 		System.out.println("starting module "+module.getName()+" with :\""+cmd+"\" ");
-		if (module.getComputer().isThisPC()){
+		module.startedRunning();
+		gui.getModuleTable().updateUI();
+		if (true){
+		//if (module.getComputer().isThisPC()){
 			try {
 				p = Runtime.getRuntime().exec(cmd);
 				// read output with BufferedReader
@@ -125,7 +129,8 @@ public class ModuleStarter extends Thread{
 				System.out.println(e);
 			}
 		}
-
+		module.stoppedRunning();
+		gui.getModuleTable().updateUI();
 	}
 	
 	public void killModule ()
@@ -134,7 +139,8 @@ public class ModuleStarter extends Thread{
 			p.destroy();
 		if (session!=null)
 			session.disconnect();
-		
+		module.stoppedRunning();
+		gui.getModuleTable().updateUI();
 	}
 	
 

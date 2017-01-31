@@ -52,12 +52,16 @@ public class ModuleOutputGui extends JFrame{
 		scrollPane.getVerticalScrollBar().setValue( scrollPane.getVerticalScrollBar().getMaximum());
 	}
 	
-	public void show(){
+	public synchronized void show(){
 		total.setVisible(true);
 	}
 	
-	public void hide(){
+	public synchronized void hide(){
 		total.setVisible(false);
+	}
+	
+	public synchronized boolean isVisible(){
+		return total.isVisible();
 	}
 	
 

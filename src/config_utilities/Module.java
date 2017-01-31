@@ -16,6 +16,7 @@ public class Module {
 	private Computer computer;
 	private String output;
 	private ModuleOutputGui outputGui;
+	private boolean running;
 
 	public Module (CnsConfig cnsConfig, String name, int listening_port, Computer computer){
 		this.cnsConfig = cnsConfig;
@@ -25,6 +26,7 @@ public class Module {
 		path="";
 		command="";
 		output="";
+		running =false;
 	}
 	
 	public String getName() {
@@ -55,16 +57,15 @@ public class Module {
 		return computer;
 	}
 	
-	public String getOutput() {
+	public synchronized String getOutput() {
 		return output;
 	}
 	
-	public void setOutput(String output) {
+	public synchronized void setOutput(String output) {
 		this.output = output;
 	}
 	
-	public void addToOutput(String newOutput){
-		//TODO secure access to output with mutex?
+	public synchronized void addToOutput(String newOutput){
 		output+=newOutput;
 		if (outputGui != null)
 			outputGui.update();
@@ -102,4 +103,17 @@ public class Module {
 			return null;
 		}
 	}
+
+	public synchronized void startedRunning() {
+		running = true;
+	}
+
+	public synchronized void stoppedRunning() {
+		running = false;
+	}
+	
+	public synchronized boolean isRunning(){
+		return running;
+	}
+	
 }

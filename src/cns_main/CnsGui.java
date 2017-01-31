@@ -325,7 +325,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		//Build Module Table
 		class MyModuleTableModel extends AbstractTableModel {
 			private static final long serialVersionUID = 1L;
-			String[] columnNames = { "Name", "Computer", "Port", "", "", "" };
+			String[] columnNames = { "Name", "Computer", "Port", "", ""};
 
 			public int getColumnCount() {
 				return columnNames.length;
@@ -341,7 +341,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 
 			public boolean isCellEditable(int row, int col)
 		      {
-				if ( col==3 || col==4 || col==5)
+				if ( col==3 || col==4)
 					return true;
 				else
 					return false;
@@ -355,12 +355,20 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 					return (Object) config.getAll_modules().get(row).getComputer().getName();
 				else if (col == 2)
 					return (Object) config.getAll_modules().get(row).getListeningPort();
-				else if (col == 3)
-					return (Object) "Start";
-				else if (col == 4)
-					return (Object) "Show output";
-				else
-					return (Object) "Kill";
+				else if (col == 3){
+					if (config.getAll_modules().get(row).isRunning())
+						return (Object) "Kill";
+					else
+						return (Object) "Start";
+					}
+				else//if (col == 4)
+				{
+					if (moduleGuis[row]==null || !moduleGuis[row].isVisible())
+						return (Object) "Show output";
+					else
+						return (Object) "Close output";
+				}
+					
 			}
 						
 		}
@@ -378,19 +386,27 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		        return component;
 	        }
 		};
-		Action start_module = new AbstractAction()
+		Action start_or_kill_module = new AbstractAction()
 		{
 
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e)
-		    {
-		        int modelRow = Integer.valueOf( e.getActionCommand() );
-		        module_monitor.start_module(modelRow);
-		        //System.out.println("Starting!! pressed row: "+modelRow);
-		    }
+			{
+				//https://docs.oracle.com/javase/tutorial/uiswing/concurrency/index.html
+				//https://www.javacodegeeks.com/2012/12/multi-threading-in-java-swing-with-swingworker.html
+				int modelRow = Integer.valueOf( e.getActionCommand() );
+				if(config.getAll_modules().get(modelRow).isRunning())
+					module_monitor.kill_module(modelRow);
+				else
+					module_monitor.start_module(modelRow);
+				//System.out.println("Starting!! pressed row: "+modelRow);
+
+
+
+			}
 		};
-		Action show_module_output = new AbstractAction()
+		Action show_or_close_module_output = new AbstractAction()
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -399,30 +415,20 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		        int modelRow = Integer.valueOf( e.getActionCommand() );
 		        if (moduleGuis[modelRow]==null)
 		        	moduleGuis[modelRow] = new ModuleOutputGui(config.getModule(modelRow));
-		        else
+		        else if (!moduleGuis[modelRow].isVisible())
 		        	moduleGuis[modelRow].show();
-		    }
-		};
-		Action kill_module = new AbstractAction()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e)
-		    {
-		        int modelRow = Integer.valueOf( e.getActionCommand() );
-		        module_monitor.kill_module(modelRow);
-		        //System.out.println("Starting!! pressed row: "+modelRow);
+		        else
+		        	moduleGuis[modelRow].hide();
+		        module_table.updateUI();
 		    }
 		};
 
 		
 		//see: tips4java.wordpress.com/2009/07/12/table-button-column/
-		ButtonColumn bc3 = new ButtonColumn (module_table, start_module, 3 );
-		ButtonColumn bc4 = new ButtonColumn (module_table, show_module_output, 4 );
-		ButtonColumn bc5 = new ButtonColumn (module_table, kill_module, 5 );
+		ButtonColumn bc3 = new ButtonColumn (module_table, start_or_kill_module, 3 );
+		ButtonColumn bc4 = new ButtonColumn (module_table, show_or_close_module_output, 4 );
 		bc3.setMnemonic(KeyEvent.VK_D);
 		bc4.setMnemonic(KeyEvent.VK_D);
-		bc5.setMnemonic(KeyEvent.VK_D);
 		
 		module_table.setPreferredScrollableViewportSize(new Dimension(500, 250));
 
@@ -507,6 +513,15 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		return computer_table;
 	}
 	
+	
+	public JTable getModuleTable() {
+		return module_table;
+	}
+
+	public void setModule_table(JTable module_table) {
+		this.module_table = module_table;
+	}
+
 	public NetworkMonitor getNetworkMonitor(){
 		return network_monitor;
 	}
