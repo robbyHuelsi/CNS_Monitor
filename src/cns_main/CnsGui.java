@@ -16,6 +16,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -449,7 +450,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		        	moduleGuis[modelRow].show();
 		        else
 		        	moduleGuis[modelRow].hide();
-		        module_table.updateUI();
+		        updateModuleTable();
 		    }
 		};
 
@@ -569,6 +570,17 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 
 	public void setTotalTitle(String title){
 		total.setTitle(title);
+	}
+	
+	public void updateModuleTable(){
+		SwingUtilities.invokeLater(new Runnable() {
+
+		    @Override
+		    public void run() {
+		    	module_table.updateUI();
+		    }
+
+		});
 	}
 	
 	private void updateViewForNewFile(){

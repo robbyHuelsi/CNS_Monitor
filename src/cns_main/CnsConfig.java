@@ -186,9 +186,9 @@ public class CnsConfig {
 					command = command.replace(ref, source);
 				} while (command.contains(ref));
 			}
-			System.out.println("Commando parsing done: " + command);
+			//System.out.println("Commando parsing done: " + command);
 		} catch (Exception e) {
-			System.out.println("Commando parsing failed: " + command);
+			//System.out.println("Commando parsing failed: " + command);
 		}
 		return command;
 	}

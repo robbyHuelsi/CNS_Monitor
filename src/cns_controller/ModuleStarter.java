@@ -38,7 +38,7 @@ public class ModuleStarter extends Thread{
 		String cmd = module.getStartCommand();
 		System.out.println("starting module "+module.getName()+" with :\""+cmd+"\" ");
 		module.startedRunning();
-		gui.getModuleTable().updateUI();
+		gui.updateModuleTable();
 		//if (true){
 		if (module.getComputer().isThisPC()){
 			try {
@@ -51,12 +51,8 @@ public class ModuleStarter extends Thread{
 				}
 				//System.out.println(module.getReader().readLine());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} /*catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+				module.addToOutput("ERROR: "+e.getMessage()+"\n");
+			} 
 		}
 		else{
 			try {
@@ -130,7 +126,7 @@ public class ModuleStarter extends Thread{
 			}
 		}
 		module.stoppedRunning();
-		gui.getModuleTable().updateUI();
+		gui.updateModuleTable();
 	}
 	
 	public void killModule ()
@@ -140,7 +136,7 @@ public class ModuleStarter extends Thread{
 		if (session!=null)
 			session.disconnect();
 		module.stoppedRunning();
-		gui.getModuleTable().updateUI();
+		gui.updateModuleTable();
 	}
 	
 

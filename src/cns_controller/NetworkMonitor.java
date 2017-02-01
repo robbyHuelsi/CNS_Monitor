@@ -68,6 +68,8 @@ public class NetworkMonitor {
 		String subnet = ip.substring(ip.indexOf("/")+1, ip.lastIndexOf("."));
 		System.out.println("Subnet: " + subnet);
 		checkAllIpAdressesAsynchronously(subnet);
+		
+		gui.getModuleTable().updateUI();
 
 		return true;
 	}
