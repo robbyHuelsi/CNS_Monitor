@@ -325,7 +325,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		//Build Module Table
 		class MyModuleTableModel extends AbstractTableModel {
 			private static final long serialVersionUID = 1L;
-			String[] columnNames = { "Name", "Computer", "Port", "", ""};
+			String[] columnNames = { "Name", "Computer", "Port", "Status", "", ""};
 
 			public int getColumnCount() {
 				return columnNames.length;
@@ -339,13 +339,21 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				return columnNames[col];
 			}
 
-			public boolean isCellEditable(int row, int col)
-		      {
-				if ( col==3 || col==4)
-					return true;
-				else
+			public boolean isCellEditable(int row, int col) {
+				if (col==4 || col==5){
+					if (config.getAll_modules().get(row).getComputer().getIp().isEmpty()) {
+						//No IP
+						return false;
+					}else if (config.getAll_modules().get(row).getStartCommand().isEmpty()){
+						//No Command
+						return false;
+					}else{
+						return true;
+					}
+				}else{
 					return false;
 				}
+			}
 
 
 			public Object getValueAt(int row, int col) {
@@ -356,19 +364,26 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				else if (col == 2)
 					return (Object) config.getAll_modules().get(row).getListeningPort();
 				else if (col == 3){
-					if (config.getAll_modules().get(row).isRunning())
+					if (config.getAll_modules().get(row).getComputer().getIp().isEmpty()) {
+						return "No IP";
+					}else if (config.getAll_modules().get(row).getStartCommand().isEmpty()){
+						return "No Command";
+					}else{
+						return "";
+					}
+				}else if(col == 4){
+					if (config.getAll_modules().get(row).isRunning()){
 						return (Object) "Kill";
-					else
+					}else{
 						return (Object) "Start";
 					}
-				else//if (col == 4)
-				{
-					if (moduleGuis[row]==null || !moduleGuis[row].isVisible())
+				}else{
+					if (moduleGuis[row]==null || !moduleGuis[row].isVisible()){
 						return (Object) "Show output";
-					else
+					}else{
 						return (Object) "Close output";
+					}
 				}
-					
 			}
 						
 		}
@@ -383,6 +398,21 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				int rendererWidth = component.getPreferredSize().width;
 				TableColumn tableColumn = getColumnModel().getColumn(column);
 				tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+				
+				if (column==4 || column==5){
+					if (config.getAll_modules().get(row).getComputer().getIp().isEmpty()) {
+						//No IP
+						component.setEnabled(false);
+					}else if (config.getAll_modules().get(row).getStartCommand().isEmpty()){
+						//No Command
+						component.setEnabled(false);
+					}else{
+						component.setEnabled(true);
+					}
+				}else{
+					component.setEnabled(true);
+				}
+				
 		        return component;
 	        }
 		};
@@ -425,10 +455,10 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 
 		
 		//see: tips4java.wordpress.com/2009/07/12/table-button-column/
-		ButtonColumn bc3 = new ButtonColumn (module_table, start_or_kill_module, 3 );
-		ButtonColumn bc4 = new ButtonColumn (module_table, show_or_close_module_output, 4 );
-		bc3.setMnemonic(KeyEvent.VK_D);
+		ButtonColumn bc4 = new ButtonColumn (module_table, start_or_kill_module, 4 );
+		ButtonColumn bc5 = new ButtonColumn (module_table, show_or_close_module_output, 5 );
 		bc4.setMnemonic(KeyEvent.VK_D);
+		bc5.setMnemonic(KeyEvent.VK_D);
 		
 		module_table.setPreferredScrollableViewportSize(new Dimension(500, 250));
 
@@ -442,6 +472,8 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		total.setSize(1000,500);
 		total.setVisible(true);
 
+		
+		
 		menuItemOpen.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fC = new JFileChooser();

@@ -60,6 +60,12 @@
 			"Command":"ping #(C.Nuc2.reachabilityChecked) -i"
 		},
 		{
+			"Name":"Attractiveness",
+			"Computer":"Nuc1",
+			"Port":"50011",
+			"Command":""
+		},
+		{
 			"Name":"HBrain",
 			"Computer":"Nuc1",
 			"Port":"50020",
@@ -90,7 +96,7 @@
 			"Command":""
 		},
 		{
-			"Name":"MiraTutNicht",
+			"Name":"Mira",
 			"Computer":"Main",
 			"Port":"50050",
 			"Command":""
