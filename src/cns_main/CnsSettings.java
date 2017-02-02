@@ -16,6 +16,8 @@ public class CnsSettings {
 	private Vector<String> recentOpenConfig = new Vector<String>();
 	private Vector<CnsPassword> passwords = new Vector<CnsPassword>();
 	
+	public final boolean autoCheckNetworkAfterLoad = true;
+	
 	public CnsSettings(){
 		if (load()) {
 			System.out.println("Settings loaded");

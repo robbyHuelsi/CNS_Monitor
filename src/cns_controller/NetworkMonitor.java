@@ -44,6 +44,7 @@ public class NetworkMonitor {
 	
 	public boolean startCompleteNetworkCheck(){
 		config.resetAllComputersIps();
+		config.setAllComputersReachabilityChecked(false);
 		checkInternetConnection();
 		
 		String ip = getOwnIpAddress();
@@ -102,7 +103,8 @@ public class NetworkMonitor {
 			    public void run() {
 			    	checkIsReachable(host, timeout);
 			    	if(++countCheckedIps >= 254){
-						config.setAllComputersReachabilityChecked();
+						config.setAllComputersReachabilityChecked(true);
+						gui.updateView_NetworkCheck(true);
 					}
 			    }
 			}).start();
@@ -131,7 +133,7 @@ public class NetworkMonitor {
 							computer.setReachabilityChecked(true);
 							System.out.println(host + ": " + mac + " (" + computer.getName() + " via WLAN)");
 						}
-						gui.getComputerTable().updateUI();
+						gui.updateView_NetworkCheck(false);
 						
 						return;
 					}
@@ -147,7 +149,7 @@ public class NetworkMonitor {
 							//computer.setReachableLan(true);
 							System.out.println(host + ": " + mac + " (" + computer.getName() + " via LAN)");
 						}
-						gui.getComputerTable().updateUI();
+						gui.updateView_NetworkCheck(false);
 						return;
 					}
 				}
