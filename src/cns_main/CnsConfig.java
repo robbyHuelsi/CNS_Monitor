@@ -46,6 +46,15 @@ public class CnsConfig {
 	public Module getModule(int module_num){
 		return all_modules.get(module_num);
 	}
+	
+	public Module getModule(String moduleName){
+		for (Module module : all_modules) {
+			if (module.getName().toLowerCase().equals(moduleName.toLowerCase())) {
+				return module;
+			}
+		}
+		return null;
+	} 
 
 	public static CnsConfig getInstance() {
 		if (instance == null){
@@ -169,9 +178,9 @@ public class CnsConfig {
 		}
 	}
 	
-	public void setAllComputersReachabilityChecked(){
+	public void setAllComputersReachabilityChecked(boolean checked){
 		for (Computer computer : all_computers) {
-			computer.setReachabilityChecked(true);
+			computer.setReachabilityChecked(checked);
 		}
 	}
 	

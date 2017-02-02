@@ -25,6 +25,9 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
+import cns_communication.CnsCommunication;
+
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
 import javax.swing.Action;
@@ -60,24 +63,27 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 	private ModuleMonitor module_monitor;
 	private NetworkMonitor network_monitor;
 	private CnsSettings setting;
+	private CnsCommunication communicator;
 	
 	private JFrame total;
 	private JTable computer_table, module_table;
-	private JMenuItem menuItemOpen, menuItemReload, menuItemExit, menuItemCheckNetwork, menuItemStartModules, menuItemKillModules, menuItemCloseModuleGuis;
+	private JMenuItem menuItemOpen, menuItemReload, menuItemExit, menuItemCheckNetwork, menuItemSendToBrain, menuItemStartModules, menuItemKillModules, menuItemCloseModuleGuis;
 	
 	private ModuleOutputGui[] moduleGuis;
+	
 
-	public CnsGui(CnsConfig config, ModuleMonitor module_monitor, NetworkMonitor network_monitor, CnsSettings setting){
+	public CnsGui(CnsConfig config, ModuleMonitor module_monitor, NetworkMonitor network_monitor, CnsSettings setting, CnsCommunication communicator){
 		super("CNS_Monitor");
 		this.config = config;
 		this.module_monitor = module_monitor;
 		this.network_monitor = network_monitor;
 		this.setting = setting;
+		this.communicator = communicator;
 		
 		this.moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
 
 
-		total = new JFrame ("crazy CNS monitor");
+		total = new JFrame ("Crazy CNS Monitor");
 		total.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		BorderLayout bl = new BorderLayout();		
@@ -95,6 +101,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		menuItemReload = new JMenuItem("Reload");
 		menuItemExit = new JMenuItem("Exit");
 		menuItemCheckNetwork = new JMenuItem("Check Network");
+		menuItemSendToBrain = new JMenuItem("Send Modules to Brain");
 		menuItemStartModules = new JMenuItem("Start Modules");
 		menuItemKillModules = new JMenuItem("Kill Modules");
 		menuItemCloseModuleGuis = new JMenuItem("Close Module GUIs");
@@ -156,7 +163,11 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				System.out.println(path);
 				if(config.load(path)){
 					setting.addRecentOpenConfig(path);
-					updateViewForNewFile();
+					updateView_NewFileLoaded();
+					if (setting.autoCheckNetworkAfterLoad) {
+						network_monitor.startCompleteNetworkCheck();
+						computer_table.updateUI();
+					}
 				}
 			}
 			
@@ -240,9 +251,11 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		JMenuRecentOpen menuOpenRecent = new JMenuRecentOpen();
 		JMenuPasswords menuPasswords = new JMenuPasswords();
 		
+		//Disable a lot of buttons;
+		updateView_NoFileLoaded();
+		
 		//Set up the menu bar
 		menuBar.add(menuFile);
-		
 		menuItemOpen.setAccelerator(KeyStroke.getKeyStroke('O', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuFile.add(menuItemOpen);
 		menuFile.add(menuOpenRecent);
@@ -253,17 +266,19 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		menuFile.add(menuItemExit);
 		
 		menuBar.add(menuNetwork);
-		menuItemCheckNetwork.setEnabled(false);
+		menuItemCheckNetwork.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuNetwork.add(menuItemCheckNetwork);
+		menuItemSendToBrain.setAccelerator(KeyStroke.getKeyStroke('B', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
+		menuNetwork.add(menuItemSendToBrain);
 		
 		menuBar.add(menuScene);
 		
 		menuBar.add(menuModule);
-		menuItemStartModules.setEnabled(false);
+		menuItemStartModules.setAccelerator(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuModule.add(menuItemStartModules);
-		menuItemKillModules.setEnabled(false);
+		menuItemKillModules.setAccelerator(KeyStroke.getKeyStroke('K', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuModule.add(menuItemKillModules);
-		menuItemCloseModuleGuis.setEnabled(false);
+		menuItemCloseModuleGuis.setAccelerator(KeyStroke.getKeyStroke('W', Toolkit.getDefaultToolkit ().getMenuShortcutKeyMask()));
 		menuModule.add(menuItemCloseModuleGuis);
 		
 		menuBar.add(menuComputer);
@@ -482,7 +497,11 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 				if (true) { //TODO: check cancel button
 					if(config.load(fC.getSelectedFile())){
 						setting.addRecentOpenConfig(fC.getSelectedFile().getPath());
-						updateViewForNewFile();
+						updateView_NewFileLoaded();
+						if (setting.autoCheckNetworkAfterLoad) {
+							network_monitor.startCompleteNetworkCheck();
+							computer_table.updateUI();
+						}
 					}
 				}
 			}
@@ -492,7 +511,11 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				if(config.load(config.getFile())){
 					closeAllModuleWindows();
-					updateViewForNewFile();
+					updateView_NewFileLoaded();
+					if (setting.autoCheckNetworkAfterLoad) {
+						network_monitor.startCompleteNetworkCheck();
+						computer_table.updateUI();
+					}
 				}
 			}
 		});
@@ -507,6 +530,12 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				network_monitor.startCompleteNetworkCheck();
 				computer_table.updateUI();
+			}
+		});
+		
+		menuItemSendToBrain.addActionListener ( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				communicator.sendToBrain("Hello World!");
 			}
 		});
 		
@@ -583,16 +612,36 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		});
 	}
 	
-	private void updateViewForNewFile(){
+	private void updateView_NoFileLoaded(){
+		menuItemCheckNetwork.setEnabled(false);
+		menuItemSendToBrain.setEnabled(false);
+		menuItemStartModules.setEnabled(false);
+		menuItemKillModules.setEnabled(false);
+		menuItemCloseModuleGuis.setEnabled(false);
+	}
+	
+	private void updateView_NewFileLoaded(){
 		closeAllModuleWindows();
 		module_monitor.kill_all_modules();
 		module_monitor.reset();
 		computer_table.updateUI();
 		module_table.updateUI();
 		menuItemCheckNetwork.setEnabled(true);
-		menuItemStartModules.setEnabled(true);
-		menuItemKillModules.setEnabled(true);
-		menuItemCloseModuleGuis.setEnabled(true);
+		menuItemSendToBrain.setEnabled(false);
+		menuItemStartModules.setEnabled(false);
+		menuItemKillModules.setEnabled(false);
+		menuItemCloseModuleGuis.setEnabled(false);
 		moduleGuis= new ModuleOutputGui[config.getAll_modules().size()];
+	}
+	
+	public void updateView_NetworkCheck(boolean done){
+		computer_table.updateUI();
+		module_table.updateUI();
+		if (done) {
+			menuItemSendToBrain.setEnabled(true);
+			menuItemStartModules.setEnabled(true);
+			menuItemKillModules.setEnabled(true);
+			menuItemCloseModuleGuis.setEnabled(true);
+		}
 	}
 }
