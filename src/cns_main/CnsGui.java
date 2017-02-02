@@ -31,6 +31,7 @@ import cns_communication.CnsCommunication;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
 import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -478,7 +479,9 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		
 		module_table.setPreferredScrollableViewportSize(new Dimension(500, 250));
 
-		JPanel tables = new JPanel(new GridLayout(2,1));
+		//JPanel tables = new JPanel(new GridLayout(2,1));
+		JPanel tables = new JPanel();
+		tables.setLayout(new BoxLayout(tables, BoxLayout.PAGE_AXIS));
 		tables.add(new JScrollPane(computer_table));
 		tables.add(new JScrollPane(module_table));
 
