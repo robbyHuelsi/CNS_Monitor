@@ -8,6 +8,7 @@ public class Start {
 	public static void main(String[] args) {
 		CnsConfig config = CnsConfig.getInstance();
 		CnsSettings setting = new CnsSettings();
+		config.setSettings(setting);
 		
 		ModuleMonitor module_monitor = new ModuleMonitor(config, setting);
 		NetworkMonitor network_monitor = new NetworkMonitor(config);

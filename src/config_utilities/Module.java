@@ -47,10 +47,12 @@ public class Module {
 	
 	public void setCommand(String command) {
 		this.command = command;
+		//this.command = cnsConfig.parseCommand(command);
 	}
 	
 	public String getStartCommand(){
 		return path+cnsConfig.parseCommand(command);
+		//return path + command;
 	}
 	
 	public Computer getComputer() {

@@ -1,11 +1,15 @@
 package config_utilities;
 
+import cns_main.CnsSettings;
+
 public class Computer {
 	
 	private String name;
 	private String ipLan, ipWlan;
 	private String user;
 	private String macLan,macWlan;
+	
+	private CnsSettings settings;
 
 
 	//private boolean reachableLan, reachableWlan;
@@ -17,12 +21,13 @@ public class Computer {
 		this.reachabilityChecked = false;
 	}
 	
-	public Computer (String name, String macLan, String macWlan, String user){
+	public Computer (String name, String macLan, String macWlan, String user, CnsSettings settings){
 		this();
 		this.name = name;
 		this.macLan = macLan;
 		this.macWlan = macWlan;
 		this.user = user;
+		this.settings = settings;
 		ipLan = "";
 		ipWlan = "";
 	}
@@ -153,6 +158,9 @@ public class Computer {
 			return getUser();
 		case "reachabilitychecked":
 			return isReachabilityChecked();
+		case "pw":
+			return settings.getPassword(this);
+			
 		default:
 			return null;
 		}

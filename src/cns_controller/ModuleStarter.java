@@ -72,15 +72,6 @@ public class ModuleStarter extends Thread{
 				//jsch.setKnownHosts(new ByteArrayInputStream(knownHostPublicKey.getBytes()));
 
 				String pass = setting.getPassword(module.getComputer());
-				if (pass == null) {
-					pass = JOptionPane.showInputDialog(null, "Please enter password for " + module.getComputer().getUser() + " on " + module.getComputer().getName() + ":", "Enter password", JOptionPane.QUESTION_MESSAGE);
-					if (pass == null) {
-						System.out.println("Cancel");
-						return;
-					}
-					setting.addPassword(module.getComputer(), pass);
-					
-				}
 				
 				session.setPassword(pass);
 				session.connect();

@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import config_utilities.Computer;
 
 public class CnsSettings {
@@ -56,7 +58,13 @@ public class CnsSettings {
 				return password.getPassword();
 			}
 		}
-		return null;
+		String pass = JOptionPane.showInputDialog(null, "Please enter password for " + computer.getUser() + " on " + computer.getName() + ":", "Enter password", JOptionPane.QUESTION_MESSAGE);
+		if (pass == null) {
+			System.out.println("Cancel");
+			return null;
+		}
+		addPassword(computer, pass);
+		return pass;
 	}
 	
 	public boolean addPassword(Computer computer, String pass){

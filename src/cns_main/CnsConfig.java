@@ -29,11 +29,18 @@ public class CnsConfig {
 	private CnsGui gui;
 	private static CnsConfig instance = null;
 	private File file;
+	private CnsSettings settings;
 
 	private Vector<Computer> all_computers = new Vector<Computer>();
 	private Vector<Module> all_modules = new Vector<Module>();
 	
 	private CnsConfig() {}
+
+	public void setSettings(CnsSettings settings) {
+		this.settings = settings;
+	}
+
+
 
 	public Vector<Computer> getAll_computers() {
 		return all_computers;
@@ -97,7 +104,7 @@ public class CnsConfig {
 				String macLan = (String) json_computer.get("MacLan").toString().toUpperCase().replaceAll("-", ":");
 				String macWlan = (String) json_computer.get("MacWlan").toString().toUpperCase().replaceAll("-", ":");
 				String user = (String) json_computer.get("User");
-				Computer computer = new Computer(name, macLan, macWlan, user);
+				Computer computer = new Computer(name, macLan, macWlan, user, settings);
 				if (gui.getNetworkMonitor().isThatAMacAddressOnOfThisComputer(macLan, macWlan)) {
 					computer.setThisPC(true);
 				}
@@ -187,7 +194,7 @@ public class CnsConfig {
 	public String parseCommand(String command){
 		try {
 			while (command.contains("#(")) {
-				System.out.println(command);
+				//System.out.println(command);
 				String ref = command.substring(command.indexOf("#("));
 				ref = ref.substring(0, ref.indexOf(")") + 1);
 				String source = parseRecursive(ref.substring(2, ref.length()-1), this);
@@ -197,7 +204,8 @@ public class CnsConfig {
 			}
 			//System.out.println("Commando parsing done: " + command);
 		} catch (Exception e) {
-			//System.out.println("Commando parsing failed: " + command);
+			//System.out.println("Commando parsing failed: " + command + " " + e.getMessage());
+			
 		}
 		return command;
 	}

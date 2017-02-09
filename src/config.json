@@ -75,7 +75,7 @@
 			"Name":"Emofani",
 			"Computer":"Nuc2",
 			"Port":"0",
-			"Command":"C:\\emofani\\emofani.exe"
+			"Command":"C:\\emofani\\miniRunAs.exe leonie #(M.VBrain.computer.pw) C:\\emofani\\emofani.exe"
 		},
 		{
 			"Name":"TTS",

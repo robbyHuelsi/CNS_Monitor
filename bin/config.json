@@ -72,6 +72,12 @@
 			"Command":""
 		},
 		{
+			"Name":"Emofani",
+			"Computer":"Nuc2",
+			"Port":"0",
+			"Command":"C:\\emofani\\miniRunAs.exe leonie #(M.VBrain.computer.pw) C:\\emofani\\emofani.exe"
+		},
+		{
 			"Name":"TTS",
 			"Computer":"Main",
 			"Port":"50021",
@@ -81,19 +87,19 @@
 			"Name":"STT",
 			"Computer":"Nuc2",
 			"Port":"50022",
-			"Command":"cd"
+			"Command":"java -jar C:\\Users\\leonie\\Documents\\GitHub\\STT\\GSTT\\GSTT_v2_2.jar 192.168.188.12 50022 192.168.188.23 8888"
 		},
 		{
 			"Name":"NoiseDetection",
 			"Computer":"Nuc2",
 			"Port":"50030",
-			"Command":""
+			"Command":"start \"\" \"C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe\" & C:\Workspace\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe 192.168.188.12 8000 192.168.188.23 8888"
 		},
 		{
 			"Name":"HandGestures",
 			"Computer":"Nuc2",
 			"Port":"50035",
-			"Command":""
+			"Command":"java -Djava.library.path=C:/Libraries/LeapMotion/x64 -jar C:\\Workspace\\HandGestures\\Handgesten\\run\\HandGestures.jar 192.168.188.12 7000 192.168.188.106 8888"
 		},
 		{
 			"Name":"Mira",
