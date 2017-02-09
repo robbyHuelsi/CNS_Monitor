@@ -87,19 +87,19 @@
 			"Name":"STT",
 			"Computer":"Nuc2",
 			"Port":"50022",
-			"Command":"java -jar C:\\Users\\leonie\\Documents\\GitHub\\STT\\GSTT\\GSTT_v2_2.jar 192.168.188.12 50022 192.168.188.23 8888"
+			"Command":"java -jar C:\\Users\\leonie\\Documents\\GitHub\\STT\\GSTT\\GSTT_v2_2.jar #(M.STT.computer.ip) #(M.STT.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"NoiseDetection",
 			"Computer":"Nuc2",
 			"Port":"50030",
-			"Command":"start \"\" \"C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe\" & C:\Workspace\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe 192.168.188.12 8000 192.168.188.23 8888"
+			"Command":"start \"\" \"C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe\" & C:\Workspace\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe #(M.NoiseDetection.computer.ip) #(M.NoiseDetection.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"HandGestures",
 			"Computer":"Nuc2",
 			"Port":"50035",
-			"Command":"java -Djava.library.path=C:/Libraries/LeapMotion/x64 -jar C:\\Workspace\\HandGestures\\Handgesten\\run\\HandGestures.jar 192.168.188.12 7000 192.168.188.106 8888"
+			"Command":"java -Djava.library.path=C:/Libraries/LeapMotion/x64 -jar C:\\Workspace\\HandGestures\\Handgesten\\run\\HandGestures.jar #(M.HandGestures.computer.ip) #(M.HandGestures.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"Mira",
