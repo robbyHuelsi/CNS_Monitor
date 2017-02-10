@@ -74,14 +74,14 @@ public class ModuleStarter extends Thread{
 				
 				session.setPassword(pass);
 				
-				session.setX11Host("127.0.0.1");
-			    session.setX11Port(300+6000);
+				session.setX11Host("localhost");
+			    session.setX11Port(6000);
 				//session.setConfig("kex", "diffie-hellman-group1-sha1"); 
 				session.connect();
 
 				Channel channel=session.openChannel("exec");
 				((ChannelExec)channel).setCommand(cmd);
-
+			
 				// X Forwarding
 				channel.setXForwarding(true);
 
