@@ -1,13 +1,12 @@
 package cns_controller;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 //import java.lang.*;
-
-import javax.swing.JOptionPane;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -74,16 +73,21 @@ public class ModuleStarter extends Thread{
 				String pass = setting.getPassword(module.getComputer());
 				
 				session.setPassword(pass);
+				
+				session.setX11Host("127.0.0.1");
+			    session.setX11Port(300+6000);
+				//session.setConfig("kex", "diffie-hellman-group1-sha1"); 
 				session.connect();
 
 				Channel channel=session.openChannel("exec");
 				((ChannelExec)channel).setCommand(cmd);
 
 				// X Forwarding
-				// channel.setXForwarding(true);
+				channel.setXForwarding(true);
 
 				//channel.setInputStream(System.in);
 				channel.setInputStream(null);
+				
 
 				//channel.setOutputStream(System.out);
 
@@ -92,28 +96,39 @@ public class ModuleStarter extends Thread{
 				((ChannelExec)channel).setErrStream(System.err);
 
 				InputStream in=channel.getInputStream();
+				PipedInputStream pis = new PipedInputStream();
+				PipedOutputStream pos = new PipedOutputStream(pis);
+				
+				((ChannelExec)channel).setErrStream(pos);
+				BufferedReader berr = new BufferedReader(new InputStreamReader(pis));
+				
 
 				channel.connect();
-
+				
+				String errLine = null;
 				byte[] tmp=new byte[1024];
 				while(true){
-					while(in.available()>0){
+					while(in.available()>0) {
 						int i=in.read(tmp, 0, 1024);
 						if(i<0)break;
 						module.addToOutput(new String(tmp, 0, i));
 					}
 					if(channel.isClosed()){
 						if(in.available()>0) continue; 
-						module.addToOutput("exit-status: "+channel.getExitStatus());
+						module.addToOutput("exit-status: "+channel.getExitStatus()+"\n");
 						break;
 					}
+					
 					try{Thread.sleep(1000);}catch(Exception ee){}
+				}
+				while( (errLine = berr.readLine())!=null){
+					module.addToOutput("ERROR: "+errLine+"\n");
 				}
 				channel.disconnect();
 				session.disconnect();
 			}
 			catch(Exception e){
-				System.out.println(e);
+				module.addToOutput("CONNECTION ERROR: "+e.getMessage());
 			}
 		}
 		module.stoppedRunning();
