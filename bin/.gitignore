@@ -1,8 +1,2 @@
-/cns_main/
-/cns_controller/
-/config_utilities/
-<<<<<<< HEAD
-/config_philipp_debugging.json
-=======
 /cns_communication/
->>>>>>> origin/master
+/cns_main/

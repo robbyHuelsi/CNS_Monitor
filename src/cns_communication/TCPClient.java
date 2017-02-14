@@ -20,12 +20,13 @@ public class TCPClient
 	 */
 	public TCPClient(InetAddress targetIP, int targetPort, boolean keepAlive)
 	{
-		System.out.println("Connection established to: " + socket.getInetAddress() + ":" + socket.getPort());
-		System.out.println("My stuff is: " + socket.getLocalAddress() + ":" + socket.getLocalPort());
 		try
 		{
 			socket = new Socket(targetIP, targetPort);
 			socket.setKeepAlive(keepAlive);
+			
+			System.out.println("Connection established to: " + socket.getInetAddress() + ":" + socket.getPort());
+			System.out.println("My stuff is: " + socket.getLocalAddress() + ":" + socket.getLocalPort());
 		} catch (IOException e)
 		{
 			System.err.println("Error on connecting to: " + targetIP + ":" + targetPort);

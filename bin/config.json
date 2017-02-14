@@ -63,7 +63,7 @@
 			"Name":"Attractiveness",
 			"Computer":"Nuc1",
 			"Port":"50011",
-			"Command":""
+			"Command":"gedit"
 		},
 		{
 			"Name":"HBrain",

@@ -8,14 +8,14 @@ import config_utilities.Module;
 
 public class CnsCommunication {
 	private CnsConfig config;
-	private TCPClient brain;
+	private TCPClient tcpToBrain;
 	
 	public CnsCommunication(CnsConfig config){
 		this.config = config;
 	}
 	
 	private boolean setupBrain(){
-		if (brain != null) {
+		if (tcpToBrain != null) {
 			System.out.println("Brain already set up");
 			return false;
 		}
@@ -44,7 +44,7 @@ public class CnsCommunication {
 		}
 		
 		try {
-			brain = new TCPClient(InetAddress.getByName(brainModule.getComputer().getIp()), brainModule.getListeningPort(), true);
+			tcpToBrain = new TCPClient(InetAddress.getByName(brainModule.getComputer().getIp()), brainModule.getListeningPort(), true);
 		} catch (UnknownHostException e) {
 			System.out.println("Connection problem with Brain");
 			e.printStackTrace();
@@ -54,9 +54,9 @@ public class CnsCommunication {
 	}
 	
 	public boolean endBrain(){
-		if (brain == null) {return true;}
-		if (brain.endConnection()) {
-			brain = null;
+		if (tcpToBrain == null) {return true;}
+		if (tcpToBrain.endConnection()) {
+			tcpToBrain = null;
 			return true;
 		}else{
 			System.out.println("Nobody can stop Brain. Hehehe.");
@@ -64,24 +64,41 @@ public class CnsCommunication {
 		}
 	}
 	
-	public boolean sendToBrain(String message){
-		if (brain == null) {
-			if (!setupBrain()) {
+	public boolean sendModulesToBrain(){
+		
+		if (config.getAll_modules().isEmpty()) {
+			System.out.println("No modules to send.");
+			return false;
+		}
+
+		if (tcpToBrain == null) {
+			//Brain not set up
+			if (!setupBrain()) { //Set Brain up
+				//Setting up brain failed
 				System.out.println("Setup communitation with Brain failed. -> Unable to send message.");
 				return false;
 			}
 		}
-		return brain.send(message);
+		
+		for (Module module : config.getAll_modules()) {
+			String msg = "#CNS#[" + module.getName() + "];[" + module.getComputer().getIp() + "];[" + module.getListeningPort() + "]";
+			if (tcpToBrain.send(msg)) {
+				System.out.println(msg + " (done)");
+			}else{
+				System.out.println(msg + " (FAILED)");
+			}
+		}
+		return true;
 	}
 	
 	public String receiveFromBrain(){
-		if (brain == null) {
+		if (tcpToBrain == null) {
 			if (!setupBrain()) {
 				System.out.println("Setup communitation with Brain failed. -> Unable to receive message.");
 				return null;
 			}
 		}
-		return brain.receive();
+		return tcpToBrain.receive();
 	}
 	
 }

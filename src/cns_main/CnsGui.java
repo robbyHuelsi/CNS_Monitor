@@ -538,7 +538,7 @@ public class CnsGui<MyLoadFileComboBox> extends JFrame{
 		
 		menuItemSendToBrain.addActionListener ( new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				communicator.sendToBrain("Hello World!");
+				communicator.sendModulesToBrain();
 			}
 		});
 		
