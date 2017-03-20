@@ -38,26 +38,26 @@
 			"Name":"PTU",
 			"Computer":"Main",
 			"Port":"0",
-			"Command":"export LD_LIBRARY_PATH=/opt/MIRA/lib:/opt/MIRA-commercial/lib:/home/leonie/MIRA-Projects/DualCamPTUConverter/lib:/home/leonie/MIRA-Projects/DualCamPTUConverterFR/lib:/home/leonie/MIRA-Projects/Leonie/lib:/home/leonie/MIRA-Projects/Waypointvisitor/lib:/home/leonie/MIRA-Projects/PTUTrackingCombined/lib:/home/leonie/MIRA-Projects/RemoteControl/UDPMira/lib:/home/leonie/MIRA-Projects/DualCamPTUConverterModified/lib:/home/leonie/FRWithDualCamPTUConverter/lib:/home/leonie/MIRA-Projects/PTUTrackingSingle/lib:/home/leonie/MIRA-Projects/Archive/Leonie/lib; /opt/MIRA/bin/mira /opt/MIRA-commercial/domains/actors/FlirPTU/etc/PTU-D46-17-S.xml /home/leonie/MIRA-Projects/PTUTrackingCombined/domains/PTUTrackingCombined/etc/PTUTrackingCombined.xml"
+			"Command":"/opt/MIRA/bin/mira /opt/MIRA-commercial/domains/actors/FlirPTU/etc/PTU-D46-17-S.xml /home/leonie/MIRA-Projects/PTUTrackingCombined/domains/PTUTrackingCombined/etc/PTUTrackingCombined.xml"
 		},
 		{
 			"Name":"TrackingWaC",
 			"Computer":"Main",
 			"Port":"50008",
-			"//":"source /home/leonie/.bashrc; /home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_fisheye.cfg -e -u /home/leonie/ACI/ACI/libUtilities/share/calib_results_fish.txt -m ~/ACI/FR-tmp/ -s 1222",
-            "Command":"source /home/leonie/.bashrc; echo $PATH"
+			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_fisheye.cfg -e -u /home/leonie/ACI/ACI/libUtilities/share/calib_results_fish.txt -m ~/ACI/FR-tmp/ -s 1222",
+            "//":"source /home/leonie/.bashrc; echo $PATH"
 		},
 		{
 			"Name":"TrackingZoomC",
 			"Computer":"Main",
 			"Port":"50009",
-			"Command":"source /home/leonie/.bashrc && /home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_zoom.cfg -e -m ~/ACI/FR-tmp/"
+			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_zoom.cfg -e -m ~/ACI/FR-tmp/"
 		},
 		{
 			"Name":"EmotionDetection",
 			"Computer":"Nuc1",
 			"Port":"50013",
-			"Command":"ping #(C.Nuc2.reachabilityChecked) -i"
+			"Command":"cd ~/Emotion-Classifier; matlab -nodesktop -nosplash - nojvm -r \"port_receive=#(M.EmotionDetection.port);port_h_Brain=#(M.HBrain.port);run use_emotion_classifier;exit\""
 		},
 		{
 			"Name":"Attractiveness",
@@ -69,7 +69,7 @@
 			"Name":"HBrain",
 			"Computer":"Nuc1",
 			"Port":"50020",
-			"Command":""
+			"Command":"python /home/leonie/H_Brain/H_Brain.py"
 		},
 		{
 			"Name":"Emofani",
@@ -93,7 +93,8 @@
 			"Name":"NoiseDetection",
 			"Computer":"Nuc2",
 			"Port":"50030",
-			"Command":"start \"\" \"C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe\" & C:\Workspace\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe #(M.NoiseDetection.computer.ip) #(M.NoiseDetection.port) #(M.Brain.computer.ip) #(M.Brain.port)"
+			"Command":"cmd \"C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe\" & C:\Workspace\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe #(M.NoiseDetection.computer.ip) #(M.NoiseDetection.port) #(M.Brain.computer.ip) #(M.Brain.port)"
+			"//":"C:\\\"Program Files\"\\\"Microsoft SDKs\"\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe & C:\Workspace\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe #(M.NoiseDetection.computer.ip) #(M.NoiseDetection.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"HandGestures",
@@ -105,7 +106,7 @@
 			"Name":"Mira",
 			"Computer":"Main",
 			"Port":"50050",
-			"Command":""
+			"Command":"miracenter /home/leonie/MIRA-Projects/Waypointvisitor/domains/tutorials/etc/WaypointVisitor.xml /opt/MIRA-commercial/domains/robot/SCITOSConfigs/etc/SCITOS-Pilot.xml --var MCFFile=/home/leonie/SCITOS_Maps/etage1/etage1_neu.mcf -p 1234"
 		}
 	],
 	"Secenes":
