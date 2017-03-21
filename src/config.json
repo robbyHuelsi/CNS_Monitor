@@ -79,9 +79,9 @@
 		},
 		{
 			"Name":"TTS",
-			"Computer":"Main",
+			"Computer":"Nuc2",
 			"Port":"50021",
-			"Command":""
+			"Command":"java -Djava.library.path=C:/Libraries/IvonaTTS/wrappers/java/lib/x86_64-pc-win64 -jar C:/Workspace/TTS/TTSJava/TTS.jar -i C:/Libraries/IvonaTTS -c Certificate.ca -v en_us_salli -o C:/tmp/tmp.wav #(M.TTS.computer.ip) #(M.TTS.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"STT",
