@@ -87,7 +87,7 @@
 			"Name":"STT",
 			"Computer":"Nuc2",
 			"Port":"50022",
-			"Command":"java -jar C:\\Users\\leonie\\Documents\\GitHub\\STT\\GSTT\\GSTT_v2_2.jar #(M.STT.computer.ip) #(M.STT.port) #(M.Brain.computer.ip) #(M.Brain.port)"
+			"Command":"java -jar C:\\Users\\leonie\\Documents\\GitHub\\STT\\GSTT_V2\\gstt_v2.jar #(M.STT.computer.ip) #(M.STT.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"NoiseDetection",
