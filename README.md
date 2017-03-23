@@ -13,4 +13,5 @@ Dafür bietet es:
 - Eine GUI in der alle Rechner mit gefundener IP adresse angezeigt werden, alle Module gestartet werden können (über SSH auf allen Rechnern) und der output der Module angezeigt werden kann.
 
 Was gibt es noch zu beachten?
+- Dieses Java projekt verwendet zwei externe libs, die im 3rd_party Ordner liegen und in eclipse unter project properties -> Java Build Path -> Libraries -> Add external JARs... hinzugefügt werden müssen
 - Da SSH und X11 forwarding eigentlich nur auf linux daheim sind, muss man auf Windows (NUC2) noch etwas beachten. Es wurde ein SSH client istalliert namens freeSSHd. Außerdem ein client, der X11 windows darstellt namens Xming. Beides sollte automatisch beim hochfahren starten. Sollte es trotzdem Probleme geben, liegen auf dem Desktop auch beiden icons.
