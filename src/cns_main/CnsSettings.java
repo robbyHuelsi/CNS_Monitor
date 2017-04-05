@@ -18,6 +18,8 @@ public class CnsSettings {
 	private Vector<String> recentOpenConfig = new Vector<String>();
 	private Vector<CnsPassword> passwords = new Vector<CnsPassword>();
 	
+	private String filePath = System.getProperty ("user.home") + System.getProperty("file.separator") + "CNSMonitor" + System.getProperty("file.separator") + "settings.cns";
+	
 	public final boolean autoCheckNetworkAfterLoad = true;
 	
 	public CnsSettings(){
@@ -102,8 +104,7 @@ public class CnsSettings {
 	}
 	
 	public boolean load(){
-		String path = getPath();
-		File f = new File(path);
+		File f = new File(filePath);
 		if(f==null || !f.exists() || f.isDirectory()) { 
 		    System.out.println("No Settings-File found");
 		    return false;
@@ -111,7 +112,7 @@ public class CnsSettings {
 		
 		ObjectInputStream objectinputstream = null;
 		try {
-			FileInputStream streamIn = new FileInputStream(path);
+			FileInputStream streamIn = new FileInputStream(filePath);
 		    objectinputstream = new ObjectInputStream(streamIn);
 
 		    Object obj= null;
@@ -143,7 +144,7 @@ public class CnsSettings {
 	
 	public boolean save(){
 		try{
-			File f = new File(getPath());
+			File f = new File(filePath);
 			
 			FileOutputStream fout = new FileOutputStream(f);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
@@ -161,22 +162,6 @@ public class CnsSettings {
 			ex.printStackTrace();
 			return false;
 		}
-	}
-	
-	private String getPath(){
-		String path;
-		//String OS = System.getProperty("os.name").toLowerCase();
-		//System.out.println(OS);
-		/*if (OS.contains("win")) {
-			return "c:\\cnsMonitor\\settings.cns";
-		}else if(OS.equals("mac os x")){
-			return System.getProperty ("user.home") + "/cnsMonitor/settings.cns";
-		}else{
-			return "/home/cnsMonitor/settings.cns";
-		}*/
-		path = System.getProperty ("user.home") + "/settings.cns";
-		//path = "settings.cns";
-		return path;
 	}
 	
 }
