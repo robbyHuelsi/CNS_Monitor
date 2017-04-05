@@ -145,7 +145,7 @@ public class CnsSettings {
 	public boolean save(){
 		try{
 			File f = new File(filePath);
-			
+			f.getParentFile().mkdirs();
 			FileOutputStream fout = new FileOutputStream(f);
 			ObjectOutputStream oos = new ObjectOutputStream(fout);
 		
