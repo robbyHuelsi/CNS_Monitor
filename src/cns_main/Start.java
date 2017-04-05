@@ -13,7 +13,7 @@ public class Start {
 		ModuleMonitor module_monitor = new ModuleMonitor(config, setting);
 		NetworkMonitor network_monitor = new NetworkMonitor(config);
 		
-		CnsCommunication communicator = new CnsCommunication(config);
+		CnsCommunication communicator = new CnsCommunication(config, false); //false = UDP, true = TCP
 		
 		CnsGui cns_gui = new CnsGui(config, module_monitor, network_monitor, setting, communicator);
 		
