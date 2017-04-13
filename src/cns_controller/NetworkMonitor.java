@@ -97,14 +97,18 @@ public class NetworkMonitor {
 	
 	private void checkAllIpAdressesAsynchronously(String subnet){
 		int timeout = 2000;
-		countCheckedIps = 0;
+		Vector<Integer> checkedIps = new Vector<Integer>();
 		
 		for (int i=1;i<255;i++){
-			String host = subnet + "." + i;			
+			Integer lastOctet = i;
+			String host = subnet + "." + lastOctet;		
 			new Thread(new Runnable() {
 			    public void run() {
-			    	checkIsReachable(host, timeout);
-			    	if(++countCheckedIps >= 254){
+			    	checkIsReachable(host, timeout + lastOctet); //Damit nach timeout nicht alle gleichzeitig auf checkedIps zugreifen, timeout für jedes Element 1ms länger
+			    	checkedIps.add(lastOctet);
+			    	System.out.println(checkedIps.size());
+			    	if(checkedIps.size() >= 254){
+			    		//Alle IP-Addressen wurden abgefragt
 						config.setAllComputersReachabilityChecked(true);
 						gui.updateView_NetworkCheck(true);
 					}
