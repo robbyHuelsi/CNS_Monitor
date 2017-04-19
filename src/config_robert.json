@@ -74,9 +74,9 @@
 		{
 			"Name":"HBrain",
 			"Computer":"Main",
-			"Port":"50020",
+			"Port":"11005",
 			"Command":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py '0'",
-			"Command2":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py '0' 'MasterBrainAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MasterBrainAD' '#(M.Brain.computer.ip)' '#(M.Brain.port)' 'TTSAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->TTSAD' '#(M.TTS.computer.ip)' '#(M.TTS.port)' 'MIRAAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MIRAAD' '#(M.Mira.computer.ip)' '#(M.Mira.port)' 'EmoFani->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->EmoFani' '#(M.Emofani.computer.ip)' '#(M.Emofani.port)'"
+			"Command_new":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py 'MasterBrainAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MasterBrainAD' '#(M.Brain.computer.ip)' '#(M.Brain.port)' 'TTSAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->TTSAD' '#(M.TTS.computer.ip)' '#(M.TTS.port)' 'MIRAAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MIRAAD' '#(M.Mira.computer.ip)' '#(M.Mira.port)' 'EmoFani->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->EmoFani' '#(M.Emofani.computer.ip)' '#(M.Emofani.port)' '0'"
 		},
 		{
 			"Name":"Emofani",
@@ -86,7 +86,7 @@
 		},
 		{
 			"Name":"TTS",
-			"Computer":"Main",
+			"Computer":"Nuc2",
 			"Port":"50021",
 			"Command":"java -Djava.library.path=C:/Libraries/IvonaTTS/wrappers/java/lib/x86_64-pc-win64 -jar C:/Workspace/TTS/TTSJava/TTS.jar -i C:/Libraries/IvonaTTS -c Certificate.ca -v en_us_salli -o C:/tmp/tmp.wav #(M.TTS.computer.ip) #(M.TTS.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
@@ -111,8 +111,8 @@
 		},
 		{
 			"Name":"Mira",
-			"Computer":"robbyMBP",
-			"Port":"50050",
+			"Computer":"Main",
+			"Port":"5000",
 			"Command":"miracenter /home/leonie/MIRA-Projects/Waypointvisitor/domains/tutorials/etc/WaypointVisitor_Atma.xml /opt/MIRA-commercial/domains/robot/SCITOSConfigs/etc/SCITOS-Pilot.xml --var MCFFile=/home/leonie/SCITOS_Maps/etage1/etage1_neu.mcf -p 1222 --var BrainIP=#(M.Brain.computer.ip) --var BrainPrt=#(M.Brain.port) --var MiraIP=#(M.Mira.computer.ip) --var MiraPrt=#(M.Mira.port)"
 		}
 	],
