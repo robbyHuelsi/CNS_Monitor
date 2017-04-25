@@ -26,9 +26,9 @@
 			"User":"leonie"
 		},
 		{
-			"Name":"carsten",
-			"MacLan":"AC:D1:B8:16:8F:27",
-			"MacWlan":"AC:D1:B8:16:8F:27",
+			"Name":"robbyiMac",
+			"MacLan":"A8:20:66:21:56:B9",
+			"MacWlan":"8C:2D:AA:3F:A8:19",
 			"User":"leonie"
 		}
 	],
@@ -36,108 +36,90 @@
 	[
 		{
 			"Name":"Brain",
-			"Computer":"robbyMBP",
+			"Computer":"robbyiMac",
 			"Port":"50000",
 			"Command":""
 		},
 		{
 			"Name":"VBrain",
-			"Computer":"Main",
-			"Port":"50010",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":""
 		},
 		{
 			"Name":"PTU",
-			"Computer":"Main",
-			"Port":"0",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"/opt/MIRA/bin/mira /opt/MIRA-commercial/domains/actors/FlirPTU/etc/PTU-D46-17-S.xml /home/leonie/MIRA-Projects/PTUTrackingCombined/domains/PTUTrackingCombined/etc/PTUTrackingCombined.xml"
 		},
 		{
 			"Name":"TrackingWaC",
-			"Computer":"Main",
-			"Port":"50008",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_fisheye.cfg -e -u /home/leonie/ACI/ACI/libUtilities/share/calib_results_fish.txt -m ~/ACI/FR-tmp/ -s 1222",
             "//":"source /home/leonie/.bashrc; echo $PATH"
 		},
 		{
 			"Name":"TrackingZoomC",
-			"Computer":"Main",
-			"Port":"50009",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"/home/leonie/ACI/ACI_build/appModifiedAdaptiveTrackingWithCombinedDualCam/appModifiedAdaptiveTrackingWithCombinedDualCam -c /home/leonie/ACI/ACI/appModifiedAdaptiveTrackingWithCombinedDualCam/default_zoom.cfg -e -m ~/ACI/FR-tmp/"
 		},
 		{
 			"Name":"EmotionDetection",
-			"Computer":"Nuc1",
-			"Port":"50013",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"cd ~/Emotion-Classifier; matlab -nodesktop -nosplash - nojvm -r \"port_receive=#(M.EmotionDetection.port);port_h_Brain=#(M.HBrain.port);run use_emotion_classifier;exit\""
 		},
 		{
 			"Name":"Attractiveness",
-			"Computer":"Nuc1",
-			"Port":"50011",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"gedit"
 		},
 		{
 			"Name":"HBrain",
-			"Computer":"Main",
-			"Port":"11005",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py '0'",
-			"Command_new":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py 'MasterBrainAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MasterBrainAD' '#(M.Brain.computer.ip)' '#(M.Brain.port)' 'TTSAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->TTSAD' '#(M.TTS.computer.ip)' '#(M.TTS.port)' 'MIRAAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MIRAAD' '#(M.Mira.computer.ip)' '#(M.Mira.port)' 'EmoFani->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->EmoFani' '#(M.Emofani.computer.ip)' '#(M.Emofani.port)' '0'"
+			"Command2":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py '0' 'MasterBrainAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MasterBrainAD' '#(M.Brain.computer.ip)' '#(M.Brain.port)' 'TTSAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->TTSAD' '#(M.TTS.computer.ip)' '#(M.TTS.port)' 'MIRAAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MIRAAD' '#(M.Mira.computer.ip)' '#(M.Mira.port)' 'EmoFani->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->EmoFani' '#(M.Emofani.computer.ip)' '#(M.Emofani.port)'"
 		},
 		{
 			"Name":"Emofani",
-			"Computer":"Nuc2",
-			"Port":"11000",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"C:\\emofani\\miniRunAs.exe leonie #(M.VBrain.computer.pw) C:\\emofani\\emofani.exe"
 		},
 		{
 			"Name":"TTS",
-			"Computer":"Nuc2",
-			"Port":"50021",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"java -Djava.library.path=C:/Libraries/IvonaTTS/wrappers/java/lib/x86_64-pc-win64 -jar C:/Workspace/TTS/TTSJava/TTS.jar -i C:/Libraries/IvonaTTS -c Certificate.ca -v en_us_salli -o C:/tmp/tmp.wav #(M.TTS.computer.ip) #(M.TTS.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"STT",
-			"Computer":"Nuc2",
-			"Port":"50022",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"java -jar C:\\Users\\leonie\\Documents\\GitHub\\STT\\GSTT_V2\\gstt_v2.jar #(M.STT.computer.ip) #(M.STT.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"Kinect2",
-			"Computer":"Nuc2",
-			"Port":"50030",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"cmd \"C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe\" & C:\Users\leonie\Documents\GitHub\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe #(M.NoiseDetection.computer.ip) #(M.NoiseDetection.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 			"//":"C:\\\"Program Files\"\\\"Microsoft SDKs\"\Kinect\v2.0_1409\bin\BodyBasics-D2D.exe & C:\Users\leonie\Documents\GitHub\SpeechDetectK2\SpeakerDetection\x64\Release\SpeakerDetection.exe #(M.NoiseDetection.computer.ip) #(M.NoiseDetection.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"LeapMotion",
-			"Computer":"Nuc2",
-			"Port":"50035",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"java -Djava.library.path=C:/Libraries/LeapMotion/x64 -jar C:\\Users\\leonie\\Documents\\GitHub\\HandGestures\\Handgesten\\run\\HandGestures.jar #(M.HandGestures.computer.ip) #(M.HandGestures.port) #(M.Brain.computer.ip) #(M.Brain.port)"
 		},
 		{
 			"Name":"Mira",
-			"Computer":"Main",
-			"Port":"5000",
+			"Computer":"robbyiMac",
+			"Port":"60828",
 			"Command":"miracenter /home/leonie/MIRA-Projects/Waypointvisitor/domains/tutorials/etc/WaypointVisitor_Atma.xml /opt/MIRA-commercial/domains/robot/SCITOSConfigs/etc/SCITOS-Pilot.xml --var MCFFile=/home/leonie/SCITOS_Maps/etage1/etage1_neu.mcf -p 1222 --var BrainIP=#(M.Brain.computer.ip) --var BrainPrt=#(M.Brain.port) --var MiraIP=#(M.Mira.computer.ip) --var MiraPrt=#(M.Mira.port)"
-		},
-		{
-			"Name":"FollowMe",
-			"Computer":"Main",
-			"Port":"50070",
-			"Command":""
-		},
-		{
-			"Name":"CrowdDet",
-			"Computer":"Main",
-			"Port":"50080",
-			"Command":""
-		},
-		{
-			"Name":"ObjectDet",
-			"Computer":"Main",
-			"Port":"50060",
-			"Command":""
 		}
 	],
 	"Secenes":

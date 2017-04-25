@@ -30,6 +30,12 @@
 			"MacLan":"AC:D1:B8:16:8F:27",
 			"MacWlan":"AC:D1:B8:16:8F:27",
 			"User":"leonie"
+		},
+		{
+			"Name":"robbyiMac",
+			"MacLan":"A8:20:66:21:56:B9",
+			"MacWlan":"8C:2D:AA:3F:A8:19",
+			"User":"leonie"
 		}
 	],
 	"Modules":
