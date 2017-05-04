@@ -1,9 +1,1 @@
-/cns_communication/
-/cns_controller/
-/cns_main/
-/config.json
-/config2.json
-/config_robert.json
-/config_utilities/
-/config_robert_MBP.json
-/config_robert_iMac.json
+/config_nuc1_madgeburg.json
