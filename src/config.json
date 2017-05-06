@@ -61,7 +61,7 @@
 		},
 		{
 			"Name":"Attractiveness",
-			"Computer":"Nuc1",
+			"Computer":"Main",
 			"Port":"50011",
 			"Command":"gedit"
 		},
