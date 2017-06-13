@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
@@ -267,13 +268,30 @@ public class NetworkMonitor {
 	}
 
 	public String getOwnIpAddress(){
-		try {
-			String ip = InetAddress.getLocalHost().toString();
-			return ip.substring(ip.indexOf("/")+1);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
+		// Find OS and set command according to OS
+	    String OS = System.getProperty("os.name").toLowerCase();
+		if (OS.contains("win") || OS.contains("mac")) {
+	        // Windows and Mac
+			try {
+				String ip = InetAddress.getLocalHost().toString();
+				return ip.substring(ip.indexOf("/")+1);
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return "";
+			}
+		}
+		else{
+			try {
+				Socket s = new Socket("google.com", 80);
+				String ip = s.getLocalAddress().getHostAddress().toString();
+				s.close();
+				return ip.substring(ip.indexOf("/")+1);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return "";
+			}
 		}
 	}
 	
