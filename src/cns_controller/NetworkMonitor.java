@@ -298,6 +298,13 @@ public class NetworkMonitor {
 	public String getOwnMacAddress(){
 		try {
 			NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+			if(network == null){
+				// Linux
+				Socket s = new Socket("google.com", 80);
+				String ip = s.getLocalAddress().getHostAddress();
+				network = NetworkInterface.getByInetAddress(InetAddress.getByName(ip));
+				s.close();
+			}
 			byte[] mac = network.getHardwareAddress();
 			
 			StringBuilder sb = new StringBuilder();
@@ -321,6 +328,10 @@ public class NetworkMonitor {
 		} catch (SocketException e){
 			e.printStackTrace();
 			return "";
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return"";
 		}
 	}
 	
