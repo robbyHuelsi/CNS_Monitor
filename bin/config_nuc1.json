@@ -3,8 +3,8 @@
 	[
 		{
 			"Name":"Main",
-			"MacLan":"00:03:2d:24:6f:24",
-			"MacWlan":"00:03:2d:24:6f:25",
+			"MacLan":"00:03:2d:37:1a:85",
+			"MacWlan":"a4:4e:31:34:4b:94",
 			"User":"leonie"
 		},
 		{
@@ -85,7 +85,7 @@
 		},
 		{
 			"Name":"HBrain",
-			"Computer":"Nuc1",
+			"Computer":"Main",
 			"Port":"11005",
 			"Command":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py '0'",
 			"Command_new":"python /home/leonie/Desktop/H_Brain-master/H_Brain.py 'MasterBrainAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MasterBrainAD' '#(M.Brain.computer.ip)' '#(M.Brain.port)' 'TTSAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->TTSAD' '#(M.TTS.computer.ip)' '#(M.TTS.port)' 'MIRAAD->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->MIRAAD' '#(M.Mira.computer.ip)' '#(M.Mira.port)' 'EmoFani->HBrain' '#(M.HBrain.computer.ip)' '#(M.HBrain.port)' 'HBrain->EmoFani' '#(M.Emofani.computer.ip)' '#(M.Emofani.port)' '0'"
