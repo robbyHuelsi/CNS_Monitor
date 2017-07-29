@@ -36,6 +36,12 @@
 			"MacLan":"A8:20:66:21:56:B9",
 			"MacWlan":"8C:2D:AA:3F:A8:19",
 			"User":"leonie"
+		},
+		{
+			"Name":"MichealDanner",
+			"MacLan":"50-7B-9D-FB-B7-0E",
+			"MacWlan":"44-85-00-F1-4B-B3",
+			"User":"leonie"
 		}
 	],
 	"Modules":
@@ -143,6 +149,18 @@
 			"Name":"ObjectDet",
 			"Computer":"Main",
 			"Port":"50060",
+			"Command":""
+		},
+		{
+			"Name":"LEDControl",
+			"Computer":"Main",
+			"Port":"50090",
+			"Command":""
+		},
+		{
+			"Name":"TVControl",
+			"Computer":"MichealDanner",
+			"Port":"50100",
 			"Command":""
 		}
 	],
