@@ -42,7 +42,14 @@
 			"MacLan":"50-7B-9D-FB-B7-0E",
 			"MacWlan":"44-85-00-F1-4B-B3",
 			"User":"leonie"
+		},
+		{
+			"Name":"Sarah",
+			"MacLan":"",
+			"MacWlan":"E8-B1-FC-A5-12-7A",
+			"User":"leonie"
 		}
+		
 	],
 	"Modules":
 	[
@@ -159,7 +166,7 @@
 		},
 		{
 			"Name":"TVControl",
-			"Computer":"MichealDanner",
+			"Computer":"Sarah",
 			"Port":"50100",
 			"Command":""
 		}
